@@ -3,12 +3,12 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
-subtitle: ''
-description: ''
+title: agmtopy博客
+subtitle: 'agmtopy'
+description: '你瞧这些白云聚了又散，散了又聚，人生离合，亦复如斯'
 keywords:
-author: John Doe
-language: en
+author: agmtopy
+language: zh-Hans
 timezone: ''
 
 # URL
@@ -93,7 +93,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -101,3 +101,10 @@ deploy:
   type: 'git'
   repo:
     github:https://github.com/agmtopy/agmtopy.github.io.git
+
+# 文章字数统计
+symbols_count_time:
+  symbols: true
+  time: true
+  total_symbols: true
+  total_time: true
