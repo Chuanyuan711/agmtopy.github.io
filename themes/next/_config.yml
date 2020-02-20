@@ -230,9 +230,9 @@ post_meta:
 # Dependencies: https://github.com/willin/hexo-wordcount
 post_wordcount:
   item_text: true
-  wordcount: false
-  min2read: false
-  totalcount: false
+  wordcount: true
+  min2read: true
+  totalcount: true
   separated_meta: true
 
 # Wechat Subscriber
@@ -802,6 +802,7 @@ vendors:
   # needMoreShare2
   # https://github.com/revir/need-more-share2
   needMoreShare2:
+
 
 
 # Assets
