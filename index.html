@@ -342,30 +342,16 @@
       
         
           
-            <p>疫情期间，需要在家远程办公，因此需要在电脑上配置两套git环境分别是github、gitlab的。在配置过程中遇到了一些阻碍，特此记录下来。</p>
-<h3 id="步骤一：生成SSH-Key"><a href="#步骤一：生成SSH-Key" class="headerlink" title="步骤一：生成SSH-Key"></a>步骤一：生成SSH-Key</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C <span class="string">"email@xx.com"</span> -f ~/.ssh/id_rsa <span class="comment">#(或gitlab_rsa)</span></span><br></pre></td></tr></table></figure>
-<p>其中<a href="mailto:email@xx.com">email@xx.com</a>为github或gitlab注册的邮箱<br>id_rsa或gitlab_rsa为生成key文件的名称，默认为id_rsa，使用别名时需要进行步骤三</p>
-<ul>
-<li>分别生成github和gitla的SSH-key</li>
-</ul>
-<h3 id="步骤二：设置Server端公钥"><a href="#步骤二：设置Server端公钥" class="headerlink" title="步骤二：设置Server端公钥"></a>步骤二：设置Server端公钥</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub <span class="comment">#(或gitlab_rsa)</span></span><br></pre></td></tr></table></figure>
-<p>将获取到的公钥设置到git服务端，也可以用编辑器打开~/.ssh/id_rsa.pub(或gitlab_rsa)将值复制设置到git服务端</p>
-<h3 id="步骤三：添加私钥"><a href="#步骤三：添加私钥" class="headerlink" title="步骤三：添加私钥"></a>步骤三：添加私钥</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-add ~/.ssh/id_rsa <span class="comment">#(或gitlab_rsa)</span></span><br></pre></td></tr></table></figure>
-<p>分别添加不同环境的私钥</p>
-<h3 id="步骤三：配置多环境的config"><a href="#步骤三：配置多环境的config" class="headerlink" title="步骤三：配置多环境的config"></a>步骤三：配置多环境的config</h3><p>在.ssh/下创建config文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># github</span></span><br><span class="line">Host github.com</span><br><span class="line">    HostName github.com</span><br><span class="line">    PreferredAuthentications publickey</span><br><span class="line">    IdentityFile ~/.ssh/id_rsa</span><br><span class="line"><span class="comment"># gitlab</span></span><br><span class="line">Host gitlab.com</span><br><span class="line">    HostName gitlab.com</span><br><span class="line">    PreferredAuthentications publickey</span><br><span class="line">    IdentityFile ~/.ssh/gitlab_rsa</span><br></pre></td></tr></table></figure>
-
-<h3 id="步骤四：测试"><a href="#步骤四：测试" class="headerlink" title="步骤四：测试"></a>步骤四：测试</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-<p>使用命令进行测试</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hi userName! You<span class="string">'ve successfully authenticated, but GitHub does not provide shell access.</span></span><br></pre></td></tr></table></figure>
-<p>这样的提示表示成功</p>
-<h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><ul>
-<li><a href="mailto:git@github.com">git@github.com</a>: Permission denied (publickey). </li>
-</ul>
-<p>1.是否修改过github.com的host<br>2.是否添加私钥</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://my.oschina.net/stefanzhlg/blog/529403" target="_blank" rel="noopener">git 配置多个SSH-Key</a><br><a href="https://www.cnblogs.com/lxwphp/p/7884700.html" target="_blank" rel="noopener">解决Permission denied (publickey).</a></p>
-
-          
+          疫情期间，需要在家远程办公，因此需要在电脑上配置两套git环境分别是github、gitlab的。在配置过程中遇到了一些阻碍，特此记录下来。
+步骤一：生成SSH-Key1ssh-keygen -t rsa -C "email@xx.com" -f ~/.ssh/id_rsa #(或gitlab_rs
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/21/git%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -514,21 +500,15 @@
       
         
           
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
+          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in 
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/20/hello-world/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
