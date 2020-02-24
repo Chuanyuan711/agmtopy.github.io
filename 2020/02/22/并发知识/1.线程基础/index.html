@@ -79,15 +79,15 @@
 
 
 
-<meta name="description" content="java并发笔记系列将java并发方面的知识总结成以下笔记，供查阅。 线程基础介绍多线程中的基础知识，包含线程创建、线程运行状态和线程中断 线程创建线程创建只有一种方式，继承Thread接口实现Run()方法 1234@Overridepublic void run()&amp;#123;&amp;#125; 通过实现Runnable接口、创建线程池、Timer类等方式底层都是这种方式实现的。 线程执行的任务 实">
+<meta name="description" content="线程基础介绍多线程中的基础知识，包含线程创建、线程运行状态和线程中断 线程创建线程创建只有一种方式，继承Thread接口实现Run()方法 1234@Overridepublic void run()&amp;#123;&amp;#125; 通过实现Runnable接口、创建线程池、Timer类等方式底层都是这种方式实现的。 线程执行的任务 实现Runable接口 1234@Overridepublic void">
 <meta property="og:type" content="article">
 <meta property="og:title" content="线程基础">
 <meta property="og:url" content="http://yoursite.com/2020/02/22/%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/1.%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="agmtopy博客">
-<meta property="og:description" content="java并发笔记系列将java并发方面的知识总结成以下笔记，供查阅。 线程基础介绍多线程中的基础知识，包含线程创建、线程运行状态和线程中断 线程创建线程创建只有一种方式，继承Thread接口实现Run()方法 1234@Overridepublic void run()&amp;#123;&amp;#125; 通过实现Runnable接口、创建线程池、Timer类等方式底层都是这种方式实现的。 线程执行的任务 实">
+<meta property="og:description" content="线程基础介绍多线程中的基础知识，包含线程创建、线程运行状态和线程中断 线程创建线程创建只有一种方式，继承Thread接口实现Run()方法 1234@Overridepublic void run()&amp;#123;&amp;#125; 通过实现Runnable接口、创建线程池、Timer类等方式底层都是这种方式实现的。 线程执行的任务 实现Runable接口 1234@Overridepublic void">
 <meta property="og:image" content="https://s2.ax1x.com/2020/02/23/31vE4A.png">
 <meta property="article:published_time" content="2020-02-22T03:28:29.000Z">
-<meta property="article:modified_time" content="2020-02-24T12:51:11.094Z">
+<meta property="article:modified_time" content="2020-02-24T14:53:03.423Z">
 <meta property="article:author" content="agmtopy">
 <meta property="article:tag" content="并发">
 <meta property="article:tag" content="多线程">
@@ -328,7 +328,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  682
+                  657
                 </span>
               
 
@@ -365,12 +365,11 @@
       
 
       
-        <h1 id="java并发笔记系列"><a href="#java并发笔记系列" class="headerlink" title="java并发笔记系列"></a>java并发笔记系列</h1><p>将java并发方面的知识总结成以下笔记，供查阅。</p>
-<h2 id="线程基础"><a href="#线程基础" class="headerlink" title="线程基础"></a>线程基础</h2><p>介绍多线程中的基础知识，包含线程创建、线程运行状态和线程中断</p>
-<h3 id="线程创建"><a href="#线程创建" class="headerlink" title="线程创建"></a>线程创建</h3><p>线程创建只有一种方式，继承<strong>Thread</strong>接口实现<strong>Run()</strong>方法</p>
+        <h1 id="线程基础"><a href="#线程基础" class="headerlink" title="线程基础"></a>线程基础</h1><p>介绍多线程中的基础知识，包含线程创建、线程运行状态和线程中断</p>
+<h2 id="线程创建"><a href="#线程创建" class="headerlink" title="线程创建"></a>线程创建</h2><p>线程创建只有一种方式，继承<strong>Thread</strong>接口实现<strong>Run()</strong>方法</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>通过实现Runnable接口、创建线程池、Timer类等方式底层都是这种方式实现的。</p>
-<h3 id="线程执行的任务"><a href="#线程执行的任务" class="headerlink" title="线程执行的任务"></a>线程执行的任务</h3><ol>
+<h2 id="线程执行的任务"><a href="#线程执行的任务" class="headerlink" title="线程执行的任务"></a>线程执行的任务</h2><ol>
 <li><p>实现<strong>Runable</strong>接口</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
@@ -388,7 +387,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> ForkJoinTask&lt;Object&gt;() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getRawResult</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setRawResult</span><span class="params">(Object value)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">exec</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>通过实现Runnable接口的方式来执行任务比直接创建线程要好的多，这样可以复用线程。</p>
-<h3 id="线程创建-1"><a href="#线程创建-1" class="headerlink" title="线程创建"></a>线程创建</h3><p>线程的状态可以分为</p>
+<h2 id="线程创建-1"><a href="#线程创建-1" class="headerlink" title="线程创建"></a>线程创建</h2><p>线程的状态可以分为</p>
 <ol>
 <li>New(新创建)</li>
 <li>Runnable(可运行)</li>
@@ -398,12 +397,12 @@
 <li>Terminated(被终止)</li>
 </ol>
 <p><img src="https://s2.ax1x.com/2020/02/23/31vE4A.png" alt="线程状态"></p>
-<h3 id="中断线程"><a href="#中断线程" class="headerlink" title="中断线程"></a>中断线程</h3><p>在java中不提供强制停止线程的方式，因为线程的强制停止可能会造成数据异常或者业务中断，这是业务方和中断方都不愿意看到的方式。java提供的方式是希望线程之间可以相互的通知、相互协助。提供这个方式的是<strong>interrupt</strong>。</p>
+<h2 id="中断线程"><a href="#中断线程" class="headerlink" title="中断线程"></a>中断线程</h2><p>在java中不提供强制停止线程的方式，因为线程的强制停止可能会造成数据异常或者业务中断，这是业务方和中断方都不愿意看到的方式。java提供的方式是希望线程之间可以相互的通知、相互协助。提供这个方式的是<strong>interrupt</strong>。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">while</span>(!Thread.currentThread().isInterrupted() &amp;&amp; more work to <span class="keyword">do</span>)&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>判断线程条件和业务规则都满足时，才会继续执行。</p>
 <p>在线程<strong>sleep</strong>期间，线程可以感受到中断信号，感受到中断信号后会清除中断位标志并且抛出<strong>InterruptedException</strong>异常。</p>
-<h3 id="volatile不能作为线程标记位"><a href="#volatile不能作为线程标记位" class="headerlink" title="volatile不能作为线程标记位"></a>volatile不能作为线程标记位</h3><p>volatile作为标记位的时候，当线程阻塞的时候，其他线程仍旧可以改变标记位的值，因此volatile不适合作为线程标记位。</p>
-<h3 id="wait-notify-notifyAll-方法使用注意"><a href="#wait-notify-notifyAll-方法使用注意" class="headerlink" title="wait/notify/notifyAll()方法使用注意"></a>wait/notify/notifyAll()方法使用注意</h3><ol>
+<h2 id="volatile不能作为线程标记位"><a href="#volatile不能作为线程标记位" class="headerlink" title="volatile不能作为线程标记位"></a>volatile不能作为线程标记位</h2><p>volatile作为标记位的时候，当线程阻塞的时候，其他线程仍旧可以改变标记位的值，因此volatile不适合作为线程标记位。</p>
+<h2 id="wait-notify-notifyAll-方法使用注意"><a href="#wait-notify-notifyAll-方法使用注意" class="headerlink" title="wait/notify/notifyAll()方法使用注意"></a>wait/notify/notifyAll()方法使用注意</h2><ol>
 <li>wait()方法，必须在<strong>synchronized</strong>中持有锁后才能使用，因为必须持有对象的<strong>monitor</strong>锁，这样才能防止在执行前后线程被切换。</li>
 <li><strong>sleep()</strong>被定义在Thread中，wait/notify/notifyAll都要操作<strong>monitor</strong>,属于对象级的锁。</li>
 <li>wait/notify与sleep的区别<ol>
@@ -596,7 +595,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#java并发笔记系列"><span class="nav-number">1.</span> <span class="nav-text">java并发笔记系列</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#线程基础"><span class="nav-number">1.1.</span> <span class="nav-text">线程基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#线程创建"><span class="nav-number">1.1.1.</span> <span class="nav-text">线程创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程执行的任务"><span class="nav-number">1.1.2.</span> <span class="nav-text">线程执行的任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程创建-1"><span class="nav-number">1.1.3.</span> <span class="nav-text">线程创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#中断线程"><span class="nav-number">1.1.4.</span> <span class="nav-text">中断线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile不能作为线程标记位"><span class="nav-number">1.1.5.</span> <span class="nav-text">volatile不能作为线程标记位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wait-notify-notifyAll-方法使用注意"><span class="nav-number">1.1.6.</span> <span class="nav-text">wait&#x2F;notify&#x2F;notifyAll()方法使用注意</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线程基础"><span class="nav-number">1.</span> <span class="nav-text">线程基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#线程创建"><span class="nav-number">1.1.</span> <span class="nav-text">线程创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程执行的任务"><span class="nav-number">1.2.</span> <span class="nav-text">线程执行的任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程创建-1"><span class="nav-number">1.3.</span> <span class="nav-text">线程创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#中断线程"><span class="nav-number">1.4.</span> <span class="nav-text">中断线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#volatile不能作为线程标记位"><span class="nav-number">1.5.</span> <span class="nav-text">volatile不能作为线程标记位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wait-notify-notifyAll-方法使用注意"><span class="nav-number">1.6.</span> <span class="nav-text">wait&#x2F;notify&#x2F;notifyAll()方法使用注意</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -630,7 +629,7 @@
     
       <span class="post-meta-item-text">网站总字数&#58;</span>
     
-    <span title="网站总字数">2.6k</span>
+    <span title="网站总字数">2.5k</span>
   
 </div>
         
