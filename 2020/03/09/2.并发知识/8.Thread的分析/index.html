@@ -79,17 +79,19 @@
 
 
 
-<meta name="description" content="ThreadLocal的分析ThreadLocal的适用场景 ThreadLocal适用于保存每个线程都独享的对象 ThreadLocal适用于保存每个线程独享的对象可供其他方法获取的场景例如web应用程序中的用户信息可以保存中用线程中，从而在其他需要用到的地方直接可以获取到">
+<meta name="description" content="ThreadLocal的分析ThreadLocal的适用场景 ThreadLocal适用于保存每个线程都独享的对象 ThreadLocal适用于保存每个线程独享的对象可供其他方法获取的场景例如web应用程序中的用户信息可以保存中用线程中，从而在其他需要用到的地方直接可以获取到  ThreadLocal是不是用来解决共享资源多线程访问的？ 不是，ThreadLocal的底层机制决定了每个线程都独立拥">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ThreadLocal的分析">
 <meta property="og:url" content="http://yoursite.com/2020/03/09/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/8.Thread%E7%9A%84%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="agmtopy博客">
-<meta property="og:description" content="ThreadLocal的分析ThreadLocal的适用场景 ThreadLocal适用于保存每个线程都独享的对象 ThreadLocal适用于保存每个线程独享的对象可供其他方法获取的场景例如web应用程序中的用户信息可以保存中用线程中，从而在其他需要用到的地方直接可以获取到">
+<meta property="og:description" content="ThreadLocal的分析ThreadLocal的适用场景 ThreadLocal适用于保存每个线程都独享的对象 ThreadLocal适用于保存每个线程独享的对象可供其他方法获取的场景例如web应用程序中的用户信息可以保存中用线程中，从而在其他需要用到的地方直接可以获取到  ThreadLocal是不是用来解决共享资源多线程访问的？ 不是，ThreadLocal的底层机制决定了每个线程都独立拥">
+<meta property="og:image" content="https://s2.ax1x.com/2020/03/09/89Hm0e.png">
 <meta property="article:published_time" content="2020-03-08T16:01:36.000Z">
-<meta property="article:modified_time" content="2020-03-08T16:47:44.208Z">
+<meta property="article:modified_time" content="2020-03-09T14:04:34.803Z">
 <meta property="article:author" content="agmtopy">
 <meta property="article:tag" content="Thread">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.ax1x.com/2020/03/09/89Hm0e.png">
 
 
 
@@ -325,7 +327,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  91
+                  534
                 </span>
               
 
@@ -341,7 +343,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  2
                 </span>
               
             </div>
@@ -366,6 +368,36 @@
 <li><strong>ThreadLocal</strong>适用于保存每个线程都独享的对象</li>
 <li><strong>ThreadLocal</strong>适用于保存每个线程独享的对象可供其他方法获取的场景<br>例如web应用程序中的用户信息可以保存中用线程中，从而在其他需要用到的地方直接可以获取到</li>
 </ul>
+<h2 id="ThreadLocal是不是用来解决共享资源多线程访问的？"><a href="#ThreadLocal是不是用来解决共享资源多线程访问的？" class="headerlink" title="ThreadLocal是不是用来解决共享资源多线程访问的？"></a>ThreadLocal是不是用来解决共享资源多线程访问的？</h2><ul>
+<li>不是，ThreadLocal的底层机制决定了每个线程都独立拥有一份空间来存放数据。虽然在效果上线程安全的，但这并不是通过解决共享资源的方式实现的。</li>
+</ul>
+<h2 id="底层原理"><a href="#底层原理" class="headerlink" title="底层原理"></a>底层原理</h2><p>每一个<strong>Thread</strong>内部都有一个<strong>ThreadLocalMap</strong>对象，在<strong>ThreadLocalMap</strong>中有保存的是<strong>ThreadLocal</strong>作为key，值作为value的k-v结构</p>
+<blockquote>
+<p>ThreadLocal.get()</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    <span class="keyword">if</span> (map != <span class="keyword">null</span>) &#123;</span><br><span class="line">        ThreadLocalMap.Entry e = map.getEntry(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">            T result = (T)e.value;</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> setInitialValue();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>this</strong>就是ThreadLocal，因为ThreadLocalMap中的key就是ThreadLocal,因此通过getEntry(this)的方式取到对应的值</p>
+<blockquote>
+<p>Thread.getMap()</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/* ThreadLocal values pertaining to this thread. This map is maintained</span></span><br><span class="line"><span class="comment"> * by the ThreadLocal class. */</span></span><br><span class="line">ThreadLocal.ThreadLocalMap threadLocals = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment"> * InheritableThreadLocal values pertaining to this thread. This map is</span></span><br><span class="line"><span class="comment"> * maintained by the InheritableThreadLocal class.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">ThreadLocal.ThreadLocalMap inheritableThreadLocals = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="function">ThreadLocalMap <span class="title">getMap</span><span class="params">(Thread t)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> t.threadLocals;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//InheritableThreadLocal</span></span><br><span class="line"><span class="function">ThreadLocalMap <span class="title">getMap</span><span class="params">(Thread t)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> t.inheritableThreadLocals;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>getMap()就是获取<strong>Thread</strong>的成员变量<strong>threadLocals</strong>、<strong>inheritableThreadLocals</strong></p>
+<ul>
+<li>ThreadLocalMap</li>
+</ul>
+<p><strong>ThreadLocalMap</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">    <span class="comment">/** The value associated with this ThreadLocal. */</span></span><br><span class="line">    Object value;</span><br><span class="line"></span><br><span class="line">    Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">        <span class="keyword">super</span>(k);</span><br><span class="line">        value = v;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Entry是一个内部类，类似于map结构。Entry这里不是采用HashMap的<strong>拉链法</strong>而是采用的是<strong>线性探测法</strong><br><strong>线性探测法</strong>原理如下：<br><img src="https://s2.ax1x.com/2020/03/09/89Hm0e.png" alt="89Hm0e.png"></p>
+<h2 id="ThreadLocal-remove"><a href="#ThreadLocal-remove" class="headerlink" title="ThreadLocal.remove"></a>ThreadLocal.remove</h2><p><strong>ThreadLocal.remove</strong>方法。在线程不使用ThreadLocal之后必须进行<strong>remove</strong>操作，因为在ThreadLocalMap中k-v是强引用关系，会造成内存泄漏。因此在不使用ThreaLocal之后一定要进行remove操作</p>
+<h2 id="InheritableThreadLocal"><a href="#InheritableThreadLocal" class="headerlink" title="InheritableThreadLocal"></a>InheritableThreadLocal</h2><p><strong>InheritableThreadLocal</strong>是子线程能访问到父线程的ThreadLoca</p>
+<blockquote>
+<p>Thread.init()</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (inheritThreadLocals &amp;&amp; parent.inheritableThreadLocals != <span class="keyword">null</span>)</span><br><span class="line">    <span class="keyword">this</span>.inheritableThreadLocals =</span><br><span class="line">        ThreadLocal.createInheritedMap(parent.inheritableThreadLocals);</span><br></pre></td></tr></table></figure>
+<p>在线程初始化方法中，会判断父线程中的<strong>inheritableThreadLocals</strong>是否有值，如果有值会将值赋给子线程</p>
 
       
     </div>
@@ -540,7 +572,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ThreadLocal的分析"><span class="nav-number">1.</span> <span class="nav-text">ThreadLocal的分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ThreadLocal的适用场景"><span class="nav-number">1.1.</span> <span class="nav-text">ThreadLocal的适用场景</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ThreadLocal的分析"><span class="nav-number">1.</span> <span class="nav-text">ThreadLocal的分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ThreadLocal的适用场景"><span class="nav-number">1.1.</span> <span class="nav-text">ThreadLocal的适用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ThreadLocal是不是用来解决共享资源多线程访问的？"><span class="nav-number">1.2.</span> <span class="nav-text">ThreadLocal是不是用来解决共享资源多线程访问的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#底层原理"><span class="nav-number">1.3.</span> <span class="nav-text">底层原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ThreadLocal-remove"><span class="nav-number">1.4.</span> <span class="nav-text">ThreadLocal.remove</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InheritableThreadLocal"><span class="nav-number">1.5.</span> <span class="nav-text">InheritableThreadLocal</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -574,7 +606,7 @@
     
       <span class="post-meta-item-text">网站总字数&#58;</span>
     
-    <span title="网站总字数">15.7k</span>
+    <span title="网站总字数">16.2k</span>
   
 </div>
 
