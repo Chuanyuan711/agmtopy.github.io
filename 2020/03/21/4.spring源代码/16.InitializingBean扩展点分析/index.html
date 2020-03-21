@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="hexo,其他," />
+  <meta name="keywords" content="spring源代码," />
 
 
 
@@ -79,18 +79,21 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="description" content="InitializingBean扩展点分析上面两篇分别分析了扩展点aware、BreaProcessesor，接下来继续分析InitializingBean 代码示例123public interface InitializingBean &amp;#123;    void afterPropertiesSet() throws Exception;&amp;#125;   代码演示   Instantiati">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2020/02/21/hello-world/index.html">
+<meta property="og:title" content="InitializingBean扩展点分析">
+<meta property="og:url" content="http://yoursite.com/2020/03/21/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/16.InitializingBean%E6%89%A9%E5%B1%95%E7%82%B9%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="agmtopy博客">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
-<meta property="article:published_time" content="2020-02-21T13:40:53.966Z">
-<meta property="article:modified_time" content="2020-02-22T03:39:16.679Z">
+<meta property="og:description" content="InitializingBean扩展点分析上面两篇分别分析了扩展点aware、BreaProcessesor，接下来继续分析InitializingBean 代码示例123public interface InitializingBean &amp;#123;    void afterPropertiesSet() throws Exception;&amp;#125;   代码演示   Instantiati">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8W8Ptf.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8Wetij.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8WeEZD.png">
+<meta property="article:published_time" content="2020-03-21T03:33:12.000Z">
+<meta property="article:modified_time" content="2020-03-21T05:13:40.306Z">
 <meta property="article:author" content="agmtopy">
-<meta property="article:tag" content="hexo">
-<meta property="article:tag" content="其他">
+<meta property="article:tag" content="spring源代码">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/03/21/8W8Ptf.png">
 
 
 
@@ -120,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/02/21/hello-world/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/03/21/4.spring源代码/16.InitializingBean扩展点分析/"/>
 
 
 
 
 
-  <title>Hello World | agmtopy博客</title>
+  <title>InitializingBean扩展点分析 | agmtopy博客</title>
   
 
 
@@ -243,7 +246,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/21/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/21/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/16.InitializingBean%E6%89%A9%E5%B1%95%E7%82%B9%E5%88%86%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="agmtopy">
@@ -260,7 +263,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">InitializingBean扩展点分析</h1>
         
 
         <div class="post-meta">
@@ -272,8 +275,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-21T21:40:53+08:00">
-                2020-02-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-21T11:33:12+08:00">
+                2020-03-21
               </time>
             
 
@@ -295,8 +298,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hexo/" itemprop="url" rel="index">
-                    <span itemprop="name">hexo</span>
+                  <a href="/categories/spring/" itemprop="url" rel="index">
+                    <span itemprop="name">spring</span>
                   </a>
                 </span>
 
@@ -326,7 +329,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  73
+                  177
                 </span>
               
 
@@ -363,19 +366,37 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+        <h1 id="InitializingBean扩展点分析"><a href="#InitializingBean扩展点分析" class="headerlink" title="InitializingBean扩展点分析"></a>InitializingBean扩展点分析</h1><p>上面两篇分别分析了扩展点<strong>aware</strong>、<strong>BreaProcessesor</strong>，接下来继续分析<strong>InitializingBean</strong></p>
+<h2 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">InitializingBean</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+<ul>
+<li>代码演示<br><img src="https://s1.ax1x.com/2020/03/21/8W8Ptf.png" alt="8W8Ptf.png"></li>
+</ul>
+<ol>
+<li>InstantiationAwareBeanPostProcessor.postProcessBeforeInstantiation()</li>
+<li>InstantiationAwareBeanPostProcessor.postProcessAfterInstantiation()</li>
+<li>InstantiationAwareBeanPostProcessor.postProcessProperties()</li>
+<li>BeanPostProcessor.postProcessBeforeInitialization()</li>
+<li>InitializingBean.afterPropertiesSet()</li>
+<li>@Init-Method.initMethhod()</li>
+<li>BeanPostProcessor.postProcessAfterInstantiation()</li>
+</ol>
+<blockquote>
+<p><strong>@PostConstruct</strong>方法底层还是依赖于<strong>BeanPostProcess接口</strong>因此应该是在4-5之间进行执行</p>
+</blockquote>
+<h2 id="执行过程"><a href="#执行过程" class="headerlink" title="执行过程"></a>执行过程</h2><ul>
+<li>调用方法</li>
+</ul>
+<ol>
+<li><p><strong>populateBean</strong><br><img src="https://s1.ax1x.com/2020/03/21/8Wetij.png" alt="8Wetij.png"></p>
+</li>
+<li><p><strong>initializeBean</strong>方法</p>
+</li>
+</ol>
+<p><img src="https://s1.ax1x.com/2020/03/21/8WeEZD.png" alt="8WeEZD.png"></p>
+<p><strong>InitializingBean</strong>接口是一个作用域为当前bean的接口，通过在初始化完成属性后进行执行</p>
+<p>在<strong>initializeBean</strong>方法比较的重要分别执行了<strong>Awarea</strong>、<strong>BeanPostProcess</strong>的后置方法、<strong>invokeInitMethods</strong>方法</p>
+<p>这三个扩展接口整体的执行流程就是<br><strong>Instantiation</strong> -&gt; <strong>BeanPostProcessor.beafore</strong> -&gt; <strong>InitializingBean</strong> -&gt; <strong>@Init-Method</strong> -&gt; <strong>BeanPostProcessor.after</strong></p>
 
       
     </div>
@@ -393,9 +414,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hexo/" rel="tag"># hexo</a>
-          
-            <a href="/tags/%E5%85%B6%E4%BB%96/" rel="tag"># 其他</a>
+            <a href="/tags/spring%E6%BA%90%E4%BB%A3%E7%A0%81/" rel="tag"># spring源代码</a>
           
         </div>
       
@@ -408,15 +427,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2020/03/20/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/15.BeanPostProcessor%E6%89%A9%E5%B1%95%E7%82%B9%E5%88%86%E6%9E%90/" rel="next" title="BeanPostProcessor扩展点分析">
+                <i class="fa fa-chevron-left"></i> BeanPostProcessor扩展点分析
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/02/21/git%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="prev" title="git多环境配置">
-                git多环境配置 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -552,7 +571,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#InitializingBean扩展点分析"><span class="nav-number">1.</span> <span class="nav-text">InitializingBean扩展点分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#代码示例"><span class="nav-number">1.1.</span> <span class="nav-text">代码示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行过程"><span class="nav-number">1.2.</span> <span class="nav-text">执行过程</span></a></li></ol></li></ol></div>
             
 
           </div>
