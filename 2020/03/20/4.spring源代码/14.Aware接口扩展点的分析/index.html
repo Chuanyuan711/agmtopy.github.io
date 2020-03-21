@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="并发容器," />
+  <meta name="keywords" content="spring源代码," />
 
 
 
@@ -79,17 +79,19 @@
 
 
 
-<meta name="description" content="并发容器有关并发的容器：HashMap、ConcurrentHashMap、CopyOnWriteArrayList HashMapHashMap在并发场景时候存在几个问题：  get()方法在容器扩容时，获取到的值可能会不正确。因为在扩容时候，hashMap没有保证容器安全性，可能会出现get()方法获取到镜像链表上，而镜像链表此时并没有值的情况 put()方法可能会造成值消失（这也是map k">
+<meta name="description" content="Aware接口扩展点的分析aware字面上的意思为感知，在spring中就是感知容器、bean的时机并进行自定义扩展的 使用 常用的Aware   类名 作用    LoadTimeWeaverAware 加载Spring Bean时织入第三方模块，如AspectJ   BeanClassLoaderAware 加载Spring Bean的类加载器   BootstrapContextAware">
 <meta property="og:type" content="article">
-<meta property="og:title" content="并发容器">
-<meta property="og:url" content="http://yoursite.com/2020/02/27/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/5.%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/index.html">
+<meta property="og:title" content="Aware接口扩展点的分析">
+<meta property="og:url" content="http://yoursite.com/2020/03/20/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/14.Aware%E6%8E%A5%E5%8F%A3%E6%89%A9%E5%B1%95%E7%82%B9%E7%9A%84%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="agmtopy博客">
-<meta property="og:description" content="并发容器有关并发的容器：HashMap、ConcurrentHashMap、CopyOnWriteArrayList HashMapHashMap在并发场景时候存在几个问题：  get()方法在容器扩容时，获取到的值可能会不正确。因为在扩容时候，hashMap没有保证容器安全性，可能会出现get()方法获取到镜像链表上，而镜像链表此时并没有值的情况 put()方法可能会造成值消失（这也是map k">
-<meta property="article:published_time" content="2020-02-27T12:59:40.000Z">
-<meta property="article:modified_time" content="2020-02-27T14:02:44.247Z">
+<meta property="og:description" content="Aware接口扩展点的分析aware字面上的意思为感知，在spring中就是感知容器、bean的时机并进行自定义扩展的 使用 常用的Aware   类名 作用    LoadTimeWeaverAware 加载Spring Bean时织入第三方模块，如AspectJ   BeanClassLoaderAware 加载Spring Bean的类加载器   BootstrapContextAware">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/20/86lLsf.png">
+<meta property="article:published_time" content="2020-03-19T16:30:00.000Z">
+<meta property="article:modified_time" content="2020-03-19T16:46:21.557Z">
 <meta property="article:author" content="agmtopy">
-<meta property="article:tag" content="并发容器">
+<meta property="article:tag" content="spring源代码">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/03/20/86lLsf.png">
 
 
 
@@ -119,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/02/27/2.并发知识/5.并发容器/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/03/20/4.spring源代码/14.Aware接口扩展点的分析/"/>
 
 
 
 
 
-  <title>并发容器 | agmtopy博客</title>
+  <title>Aware接口扩展点的分析 | agmtopy博客</title>
   
 
 
@@ -242,7 +244,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/27/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/5.%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/20/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/14.Aware%E6%8E%A5%E5%8F%A3%E6%89%A9%E5%B1%95%E7%82%B9%E7%9A%84%E5%88%86%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="agmtopy">
@@ -259,7 +261,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">并发容器</h1>
+          <h1 class="post-title" itemprop="name headline">Aware接口扩展点的分析</h1>
         
 
         <div class="post-meta">
@@ -271,8 +273,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-27T20:59:40+08:00">
-                2020-02-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-20T00:30:00+08:00">
+                2020-03-20
               </time>
             
 
@@ -294,8 +296,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index">
-                    <span itemprop="name">java并发</span>
+                  <a href="/categories/spring/" itemprop="url" rel="index">
+                    <span itemprop="name">spring</span>
                   </a>
                 </span>
 
@@ -325,7 +327,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  442
+                  278
                 </span>
               
 
@@ -362,17 +364,76 @@
       
 
       
-        <h1 id="并发容器"><a href="#并发容器" class="headerlink" title="并发容器"></a>并发容器</h1><p>有关并发的容器：HashMap、ConcurrentHashMap、CopyOnWriteArrayList</p>
-<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><p><strong>HashMap</strong>在并发场景时候存在几个问题：</p>
-<ol>
-<li>get()方法在容器扩容时，获取到的值可能会不正确。因为在扩容时候，hashMap没有保证容器安全性，可能会出现get()方法获取到镜像链表上，而镜像链表此时并没有值的情况</li>
-<li>put()方法可能会造成值消失（这也是map k-v的特性）</li>
-<li>可见性问题</li>
-<li>死循环cpu占用100%。多个线程同时扩容时，会反转散列表的节点，会有死锁场景相互等待。</li>
-</ol>
-<h2 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h2><p><strong>ConcurrentHashMap</strong>底层是采用CAS+synchronized的方式，来保证并发安全性。synchronized保证写操作时资源竞争激烈情况下的安全用CAS机制来保证写操作下轻量级的竞争的安全性。</p>
-<p>map中链表红黑树的设计：红黑树在map中属于一种保底，防御性的编程方式。当hash()方法设计良好的时候，散列表中的元素是符合泊松分布，此时很难出现红黑树的情况，可能性为千万分之一，当出现这样的情况时。首先看容量，在考虑hash()方法是否设计良好。8个的限制是基于空间和时间权衡下得出的。</p>
-<h2 id="CopyOnWriteArrayList"><a href="#CopyOnWriteArrayList" class="headerlink" title="CopyOnWriteArrayList"></a>CopyOnWriteArrayList</h2><p><strong>CopyOnWriteArrayList</strong>是线程安全的列表，适合于读多写少的场景，列入内存字典等。<br>CopyOnWriteArrayList底层是采用<strong>ReentrantLock</strong>和volatile修饰数组来保证并发的安全性的。<br>特点：可在迭代器中进行修改列表，当时不会在此次迭代中体系。原因是内部采用双重数组的方式进行扩容，因此迭代器只能读取迭代开始时的元素集合。</p>
+        <h1 id="Aware接口扩展点的分析"><a href="#Aware接口扩展点的分析" class="headerlink" title="Aware接口扩展点的分析"></a>Aware接口扩展点的分析</h1><p><strong>aware</strong>字面上的意思为感知，在spring中就是感知容器、bean的时机并进行自定义扩展的</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p><img src="https://s1.ax1x.com/2020/03/20/86lLsf.png" alt="86lLsf.png"></p>
+<h2 id="常用的Aware"><a href="#常用的Aware" class="headerlink" title="常用的Aware"></a>常用的Aware</h2><table>
+<thead>
+<tr>
+<th>类名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LoadTimeWeaverAware</td>
+<td>加载Spring Bean时织入第三方模块，如AspectJ</td>
+</tr>
+<tr>
+<td>BeanClassLoaderAware</td>
+<td>加载Spring Bean的类加载器</td>
+</tr>
+<tr>
+<td>BootstrapContextAware</td>
+<td>资源适配器BootstrapContext，如JCA,CCI</td>
+</tr>
+<tr>
+<td>ResourceLoaderAware</td>
+<td>底层访问资源的加载器</td>
+</tr>
+<tr>
+<td>BeanFactoryAware</td>
+<td>声明BeanFactory</td>
+</tr>
+<tr>
+<td>PortletConfigAware</td>
+<td>PortletConfig</td>
+</tr>
+<tr>
+<td>PortletContextAware</td>
+<td>PortletContext</td>
+</tr>
+<tr>
+<td>ServletConfigAware</td>
+<td>ServletConfig</td>
+</tr>
+<tr>
+<td>ServletContextAware</td>
+<td>ServletContext</td>
+</tr>
+<tr>
+<td>MessageSourceAware</td>
+<td>国际化</td>
+</tr>
+<tr>
+<td>ApplicationEventPublisherAware</td>
+<td>应用事件</td>
+</tr>
+<tr>
+<td>NotificationPublisherAware</td>
+<td>JMX通知</td>
+</tr>
+<tr>
+<td>BeanNameAware</td>
+<td>声明Spring Bean的名字</td>
+</tr>
+</tbody></table>
+<h2 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h2><ul>
+<li>AbstractAutowireCapableBeanFactory</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">invokeAwareMethods</span><span class="params">(<span class="keyword">final</span> String beanName, <span class="keyword">final</span> Object bean)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (bean <span class="keyword">instanceof</span> Aware) &#123;</span><br><span class="line">			<span class="keyword">if</span> (bean <span class="keyword">instanceof</span> BeanNameAware) &#123;</span><br><span class="line">				((BeanNameAware) bean).setBeanName(beanName);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (bean <span class="keyword">instanceof</span> BeanClassLoaderAware) &#123;</span><br><span class="line">				ClassLoader bcl = getBeanClassLoader();</span><br><span class="line">				<span class="keyword">if</span> (bcl != <span class="keyword">null</span>) &#123;</span><br><span class="line">					((BeanClassLoaderAware) bean).setBeanClassLoader(bcl);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (bean <span class="keyword">instanceof</span> BeanFactoryAware) &#123;</span><br><span class="line">				((BeanFactoryAware) bean).setBeanFactory(AbstractAutowireCapableBeanFactory.<span class="keyword">this</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">*/</span><br><span class="line"><span class="function"><span class="keyword">protected</span> Object <span class="title">initializeBean</span><span class="params">(<span class="keyword">final</span> String beanName, <span class="keyword">final</span> Object bean, @Nullable RootBeanDefinition mbd)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (System.getSecurityManager() != <span class="keyword">null</span>) &#123;</span><br><span class="line">		AccessController.doPrivileged((PrivilegedAction&lt;Object&gt;) () -&gt; &#123;</span><br><span class="line">			invokeAwareMethods(beanName, bean);</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">		&#125;, getAccessControlContext());</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		invokeAwareMethods(beanName, bean);</span><br><span class="line">	&#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在初始化bean的时候判断bean是否是aware子类本进行回调。对于其他aware子类也应该一样是在设定的业务回调点进行回调。</p>
 
       
     </div>
@@ -390,7 +451,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/" rel="tag"># 并发容器</a>
+            <a href="/tags/spring%E6%BA%90%E4%BB%A3%E7%A0%81/" rel="tag"># spring源代码</a>
           
         </div>
       
@@ -403,8 +464,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/02/26/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/4.%E9%94%81/" rel="next" title="锁">
-                <i class="fa fa-chevron-left"></i> 锁
+              <a href="/2020/03/19/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/13.%E5%88%9B%E5%BB%BAbean%E7%9A%84%E6%B5%81%E7%A8%8B/" rel="next" title="创建bean的流程">
+                <i class="fa fa-chevron-left"></i> 创建bean的流程
               </a>
             
           </div>
@@ -413,8 +474,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/02/28/1.%E8%AF%BB%E4%B9%A6%E6%9D%82%E8%AE%B0/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E6%80%9D%E8%80%83/" rel="prev" title="分布式事务理解">
-                分布式事务理解 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/03/20/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/15.BeanPostProcessor%E6%89%A9%E5%B1%95%E7%82%B9%E5%88%86%E6%9E%90/" rel="prev" title="BeanPostProcessor扩展点分析">
+                BeanPostProcessor扩展点分析 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -551,7 +612,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#并发容器"><span class="nav-number">1.</span> <span class="nav-text">并发容器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap"><span class="nav-number">1.1.</span> <span class="nav-text">HashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ConcurrentHashMap"><span class="nav-number">1.2.</span> <span class="nav-text">ConcurrentHashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CopyOnWriteArrayList"><span class="nav-number">1.3.</span> <span class="nav-text">CopyOnWriteArrayList</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Aware接口扩展点的分析"><span class="nav-number">1.</span> <span class="nav-text">Aware接口扩展点的分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">1.1.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的Aware"><span class="nav-number">1.2.</span> <span class="nav-text">常用的Aware</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何实现"><span class="nav-number">1.3.</span> <span class="nav-text">如何实现</span></a></li></ol></li></ol></div>
             
 
           </div>

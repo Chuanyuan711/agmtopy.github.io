@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="并发容器," />
+  <meta name="keywords" content="spring源代码," />
 
 
 
@@ -79,17 +79,22 @@
 
 
 
-<meta name="description" content="并发容器有关并发的容器：HashMap、ConcurrentHashMap、CopyOnWriteArrayList HashMapHashMap在并发场景时候存在几个问题：  get()方法在容器扩容时，获取到的值可能会不正确。因为在扩容时候，hashMap没有保证容器安全性，可能会出现get()方法获取到镜像链表上，而镜像链表此时并没有值的情况 put()方法可能会造成值消失（这也是map k">
+<meta name="description" content="BeanPostProcessor扩展点分析 BeanPostProcess接口是在Bean完成实例化后，如果我们要对所有的加载bean进行一些处理或增加配置的接口   BeanPostProcessor.java  1234BeanPostProcessor&amp;#123;    Object postProcessBeforeInitialization(Object bean, String b">
 <meta property="og:type" content="article">
-<meta property="og:title" content="并发容器">
-<meta property="og:url" content="http://yoursite.com/2020/02/27/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/5.%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/index.html">
+<meta property="og:title" content="BeanPostProcessor扩展点分析">
+<meta property="og:url" content="http://yoursite.com/2020/03/20/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/15.BeanPostProcessor%E6%89%A9%E5%B1%95%E7%82%B9%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="agmtopy博客">
-<meta property="og:description" content="并发容器有关并发的容器：HashMap、ConcurrentHashMap、CopyOnWriteArrayList HashMapHashMap在并发场景时候存在几个问题：  get()方法在容器扩容时，获取到的值可能会不正确。因为在扩容时候，hashMap没有保证容器安全性，可能会出现get()方法获取到镜像链表上，而镜像链表此时并没有值的情况 put()方法可能会造成值消失（这也是map k">
-<meta property="article:published_time" content="2020-02-27T12:59:40.000Z">
-<meta property="article:modified_time" content="2020-02-27T14:02:44.247Z">
+<meta property="og:description" content="BeanPostProcessor扩展点分析 BeanPostProcess接口是在Bean完成实例化后，如果我们要对所有的加载bean进行一些处理或增加配置的接口   BeanPostProcessor.java  1234BeanPostProcessor&amp;#123;    Object postProcessBeforeInitialization(Object bean, String b">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8RTugf.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8RvFDx.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8RvtPg.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8RzUun.png">
+<meta property="article:published_time" content="2020-03-19T16:47:03.000Z">
+<meta property="article:modified_time" content="2020-03-21T03:28:52.868Z">
 <meta property="article:author" content="agmtopy">
-<meta property="article:tag" content="并发容器">
+<meta property="article:tag" content="spring源代码">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/03/21/8RTugf.png">
 
 
 
@@ -119,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/02/27/2.并发知识/5.并发容器/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/03/20/4.spring源代码/15.BeanPostProcessor扩展点分析/"/>
 
 
 
 
 
-  <title>并发容器 | agmtopy博客</title>
+  <title>BeanPostProcessor扩展点分析 | agmtopy博客</title>
   
 
 
@@ -242,7 +247,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/27/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/5.%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/20/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/15.BeanPostProcessor%E6%89%A9%E5%B1%95%E7%82%B9%E5%88%86%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="agmtopy">
@@ -259,7 +264,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">并发容器</h1>
+          <h1 class="post-title" itemprop="name headline">BeanPostProcessor扩展点分析</h1>
         
 
         <div class="post-meta">
@@ -271,8 +276,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-27T20:59:40+08:00">
-                2020-02-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-20T00:47:03+08:00">
+                2020-03-20
               </time>
             
 
@@ -294,8 +299,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index">
-                    <span itemprop="name">java并发</span>
+                  <a href="/categories/spring/" itemprop="url" rel="index">
+                    <span itemprop="name">spring</span>
                   </a>
                 </span>
 
@@ -325,7 +330,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  442
+                  426
                 </span>
               
 
@@ -362,17 +367,51 @@
       
 
       
-        <h1 id="并发容器"><a href="#并发容器" class="headerlink" title="并发容器"></a>并发容器</h1><p>有关并发的容器：HashMap、ConcurrentHashMap、CopyOnWriteArrayList</p>
-<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><p><strong>HashMap</strong>在并发场景时候存在几个问题：</p>
-<ol>
-<li>get()方法在容器扩容时，获取到的值可能会不正确。因为在扩容时候，hashMap没有保证容器安全性，可能会出现get()方法获取到镜像链表上，而镜像链表此时并没有值的情况</li>
-<li>put()方法可能会造成值消失（这也是map k-v的特性）</li>
-<li>可见性问题</li>
-<li>死循环cpu占用100%。多个线程同时扩容时，会反转散列表的节点，会有死锁场景相互等待。</li>
+        <h1 id="BeanPostProcessor扩展点分析"><a href="#BeanPostProcessor扩展点分析" class="headerlink" title="BeanPostProcessor扩展点分析"></a>BeanPostProcessor扩展点分析</h1><blockquote>
+<p>BeanPostProcess接口是在Bean完成实例化后，如果我们要对所有的加载bean进行一些处理或增加配置的接口</p>
+</blockquote>
+<ul>
+<li>BeanPostProcessor.java</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BeanPostProcessor&#123;</span><br><span class="line">    <span class="function">Object <span class="title">postProcessBeforeInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException</span>;</span><br><span class="line">    <span class="function">Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行结果</li>
+</ul>
+<p><a href="https://imgchr.com/i/8RTugf" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/21/8RTugf.png" alt="8RTugf.png"></a></p>
+<p>可以看出<strong>BeanPostprocessor</strong>会对每一个bean在初始化前后进行处理</p>
+<h2 id="处理机制"><a href="#处理机制" class="headerlink" title="处理机制"></a>处理机制</h2><p><img src="https://s1.ax1x.com/2020/03/21/8RvFDx.png" alt="8RvFDx.png"></p>
+<blockquote>
+<p>在完成属性装配之后执行<strong>initializeBean</strong>方法</p>
+</blockquote>
+<p><a href="https://imgchr.com/i/8RvtPg" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/21/8RvtPg.md.png" alt="8RvtPg.md.png"></a></p>
+<p>注意在这里的<strong>getBeanPostProcessors()</strong>并没有选择某些特定的BeanPostProcessor来执行；<br>在装配属性的<strong>populateBean</strong>方法中会指定执行接口，如下所示：<br><img src="https://s1.ax1x.com/2020/03/21/8RzUun.png" alt="8RzUun.png"></p>
+<h2 id="BeanPostProcessor加载时机"><a href="#BeanPostProcessor加载时机" class="headerlink" title="BeanPostProcessor加载时机"></a>BeanPostProcessor加载时机</h2><p>在<strong>AbstractApplicationContext</strong>刷新容器的过程中会执行<strong>registerBeanPostProcessors</strong>方法.这个方法的目的就是将<strong>BeanPostProcessors</strong>子类注册到BeanFactory中，其中还会实现<strong>priority</strong>、<strong>order</strong>等功能进行排序<br><a href="https://s1.ax1x.com/2020/03/21/8WSfMj.png" target="_blank" rel="noopener">8WSfMj.png</a></p>
+<h2 id="常用的BeanPostProcessor子类"><a href="#常用的BeanPostProcessor子类" class="headerlink" title="常用的BeanPostProcessor子类"></a>常用的BeanPostProcessor子类</h2><table>
+<thead>
+<tr>
+<th>类名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>InstantiationAwareBeanPostProcessorAdapter</td>
+<td>实例化后进行初始化前后执行（可以对属性的装配进行控制）</td>
+</tr>
+<tr>
+<td>ServletContextAwareProcessor</td>
+<td>对servletContext进行处理</td>
+</tr>
+<tr>
+<td>ApplicationContextAwareProcessor</td>
+<td>对容器工具类进行赋值操作，以便后续进行使用（例如注入环境变量这些）</td>
+</tr>
+</tbody></table>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li><strong>BeanPostProcessor</strong> 的作用域是容器级别的，它只和所在的容器相关 ，当 <strong>BeanPostProcessor</strong> 完成注册后，它会应用于所有跟它在同一个容器内的 bean 。</li>
+<li><strong>BeanFactory</strong> 和 <strong>ApplicationContext</strong> 对 <strong>BeanPostProcessor</strong> 的处理不同，ApplicationContext 会自动检测所有实现了 <strong>BeanPostProcessor</strong> 接口的 bean，并完成注册，但是使用 BeanFactory 容器时则需要手动调用 <strong>AbstractBeanFactory#addBeanPostProcessor(BeanPostProcessor beanPostProcessor)</strong> 方法来完成注册</li>
+<li><strong>ApplicationContext</strong> 的 <strong>BeanPostProcessor</strong> 支持 Ordered，而 BeanFactory 的 <strong>BeanPostProcessor</strong> 是不支持的，原因在于ApplicationContext 会对 <strong>BeanPostProcessor</strong> 进行 Ordered 检测并完成排序，而 BeanFactory 中的 <strong>BeanPostProcessor</strong> 只跟注册的顺序有关。</li>
 </ol>
-<h2 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h2><p><strong>ConcurrentHashMap</strong>底层是采用CAS+synchronized的方式，来保证并发安全性。synchronized保证写操作时资源竞争激烈情况下的安全用CAS机制来保证写操作下轻量级的竞争的安全性。</p>
-<p>map中链表红黑树的设计：红黑树在map中属于一种保底，防御性的编程方式。当hash()方法设计良好的时候，散列表中的元素是符合泊松分布，此时很难出现红黑树的情况，可能性为千万分之一，当出现这样的情况时。首先看容量，在考虑hash()方法是否设计良好。8个的限制是基于空间和时间权衡下得出的。</p>
-<h2 id="CopyOnWriteArrayList"><a href="#CopyOnWriteArrayList" class="headerlink" title="CopyOnWriteArrayList"></a>CopyOnWriteArrayList</h2><p><strong>CopyOnWriteArrayList</strong>是线程安全的列表，适合于读多写少的场景，列入内存字典等。<br>CopyOnWriteArrayList底层是采用<strong>ReentrantLock</strong>和volatile修饰数组来保证并发的安全性的。<br>特点：可在迭代器中进行修改列表，当时不会在此次迭代中体系。原因是内部采用双重数组的方式进行扩容，因此迭代器只能读取迭代开始时的元素集合。</p>
 
       
     </div>
@@ -390,7 +429,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/" rel="tag"># 并发容器</a>
+            <a href="/tags/spring%E6%BA%90%E4%BB%A3%E7%A0%81/" rel="tag"># spring源代码</a>
           
         </div>
       
@@ -403,8 +442,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/02/26/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/4.%E9%94%81/" rel="next" title="锁">
-                <i class="fa fa-chevron-left"></i> 锁
+              <a href="/2020/03/20/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/14.Aware%E6%8E%A5%E5%8F%A3%E6%89%A9%E5%B1%95%E7%82%B9%E7%9A%84%E5%88%86%E6%9E%90/" rel="next" title="Aware接口扩展点的分析">
+                <i class="fa fa-chevron-left"></i> Aware接口扩展点的分析
               </a>
             
           </div>
@@ -412,10 +451,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/02/28/1.%E8%AF%BB%E4%B9%A6%E6%9D%82%E8%AE%B0/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E6%80%9D%E8%80%83/" rel="prev" title="分布式事务理解">
-                分布式事务理解 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -551,7 +586,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#并发容器"><span class="nav-number">1.</span> <span class="nav-text">并发容器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap"><span class="nav-number">1.1.</span> <span class="nav-text">HashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ConcurrentHashMap"><span class="nav-number">1.2.</span> <span class="nav-text">ConcurrentHashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CopyOnWriteArrayList"><span class="nav-number">1.3.</span> <span class="nav-text">CopyOnWriteArrayList</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#BeanPostProcessor扩展点分析"><span class="nav-number">1.</span> <span class="nav-text">BeanPostProcessor扩展点分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#处理机制"><span class="nav-number">1.1.</span> <span class="nav-text">处理机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BeanPostProcessor加载时机"><span class="nav-number">1.2.</span> <span class="nav-text">BeanPostProcessor加载时机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的BeanPostProcessor子类"><span class="nav-number">1.3.</span> <span class="nav-text">常用的BeanPostProcessor子类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.4.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
             
 
           </div>
