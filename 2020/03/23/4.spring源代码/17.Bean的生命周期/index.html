@@ -79,22 +79,19 @@
 
 
 
-<meta name="description" content="BeanPostProcessor扩展点分析 BeanPostProcess接口是在Bean完成实例化后，如果我们要对所有的加载bean进行一些处理或增加配置的接口   BeanPostProcessor.java  1234BeanPostProcessor&amp;#123;    Object postProcessBeforeInitialization(Object bean, String b">
+<meta name="description" content="Bean的生命周期先上一张流程图  从图中可以看出初始化bean的流程主要分为  实例化Bean Aware、BeanProcessor处理 bean自己的init方法 注销bean时执行destroy-method方法  实例化Bean实例化bean主要是用BeanWrapperImpl,其主要作用是对这个Bean进行包装。Bean的初始化主要是根据策略模式来进行选择是用JDK的动态代理或CGL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BeanPostProcessor扩展点分析">
-<meta property="og:url" content="http://yoursite.com/2020/03/20/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/15.BeanPostProcessor%E6%89%A9%E5%B1%95%E7%82%B9%E5%88%86%E6%9E%90/index.html">
+<meta property="og:title" content="Bean的生命周期">
+<meta property="og:url" content="http://yoursite.com/2020/03/23/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/17.Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/index.html">
 <meta property="og:site_name" content="agmtopy博客">
-<meta property="og:description" content="BeanPostProcessor扩展点分析 BeanPostProcess接口是在Bean完成实例化后，如果我们要对所有的加载bean进行一些处理或增加配置的接口   BeanPostProcessor.java  1234BeanPostProcessor&amp;#123;    Object postProcessBeforeInitialization(Object bean, String b">
-<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8RTugf.png">
-<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8RvFDx.png">
-<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8RvtPg.md.png">
-<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8RzUun.png">
-<meta property="article:published_time" content="2020-03-19T16:47:03.000Z">
-<meta property="article:modified_time" content="2020-03-21T03:28:52.868Z">
+<meta property="og:description" content="Bean的生命周期先上一张流程图  从图中可以看出初始化bean的流程主要分为  实例化Bean Aware、BeanProcessor处理 bean自己的init方法 注销bean时执行destroy-method方法  实例化Bean实例化bean主要是用BeanWrapperImpl,其主要作用是对这个Bean进行包装。Bean的初始化主要是根据策略模式来进行选择是用JDK的动态代理或CGL">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/23/8HBWTA.png">
+<meta property="article:published_time" content="2020-03-23T14:17:01.000Z">
+<meta property="article:modified_time" content="2020-03-23T16:08:54.117Z">
 <meta property="article:author" content="agmtopy">
 <meta property="article:tag" content="spring源代码">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://s1.ax1x.com/2020/03/21/8RTugf.png">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/03/23/8HBWTA.png">
 
 
 
@@ -124,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/03/20/4.spring源代码/15.BeanPostProcessor扩展点分析/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/03/23/4.spring源代码/17.Bean的生命周期/"/>
 
 
 
 
 
-  <title>BeanPostProcessor扩展点分析 | agmtopy博客</title>
+  <title>Bean的生命周期 | agmtopy博客</title>
   
 
 
@@ -247,7 +244,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/20/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/15.BeanPostProcessor%E6%89%A9%E5%B1%95%E7%82%B9%E5%88%86%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/23/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/17.Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="agmtopy">
@@ -264,7 +261,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">BeanPostProcessor扩展点分析</h1>
+          <h1 class="post-title" itemprop="name headline">Bean的生命周期</h1>
         
 
         <div class="post-meta">
@@ -276,8 +273,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-20T00:47:03+08:00">
-                2020-03-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-23T22:17:01+08:00">
+                2020-03-23
               </time>
             
 
@@ -330,7 +327,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  426
+                  530
                 </span>
               
 
@@ -346,7 +343,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  2
                 </span>
               
             </div>
@@ -367,50 +364,44 @@
       
 
       
-        <h1 id="BeanPostProcessor扩展点分析"><a href="#BeanPostProcessor扩展点分析" class="headerlink" title="BeanPostProcessor扩展点分析"></a>BeanPostProcessor扩展点分析</h1><blockquote>
-<p>BeanPostProcess接口是在Bean完成实例化后，如果我们要对所有的加载bean进行一些处理或增加配置的接口</p>
-</blockquote>
-<ul>
-<li>BeanPostProcessor.java</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BeanPostProcessor&#123;</span><br><span class="line">    <span class="function">Object <span class="title">postProcessBeforeInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException</span>;</span><br><span class="line">    <span class="function">Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>执行结果</li>
-</ul>
-<p><a href="https://imgchr.com/i/8RTugf" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/21/8RTugf.png" alt="8RTugf.png"></a></p>
-<p>可以看出<strong>BeanPostprocessor</strong>会对每一个bean在初始化前后进行处理</p>
-<h2 id="处理机制"><a href="#处理机制" class="headerlink" title="处理机制"></a>处理机制</h2><p><img src="https://s1.ax1x.com/2020/03/21/8RvFDx.png" alt="8RvFDx.png"></p>
+        <h1 id="Bean的生命周期"><a href="#Bean的生命周期" class="headerlink" title="Bean的生命周期"></a>Bean的生命周期</h1><p>先上一张流程图</p>
+<p><img src="https://s1.ax1x.com/2020/03/23/8HBWTA.png" alt="8HBWTA.png"></p>
+<p>从图中可以看出初始化bean的流程主要分为</p>
+<ol>
+<li>实例化Bean</li>
+<li>Aware、BeanProcessor处理</li>
+<li>bean自己的init方法</li>
+<li>注销bean时执行destroy-method方法</li>
+</ol>
+<h2 id="实例化Bean"><a href="#实例化Bean" class="headerlink" title="实例化Bean"></a>实例化Bean</h2><p>实例化bean主要是用<strong>BeanWrapperImpl</strong>,其主要作用是对这个Bean进行包装。Bean的初始化主要是根据策略模式来进行选择是用JDK的动态代理或CGLib的动态代理来实现。关键代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Strategy for creating bean instances. */</span></span><br><span class="line"><span class="keyword">private</span> InstantiationStrategy instantiationStrategy = <span class="keyword">new</span> CglibSubclassingInstantiationStrategy();</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> BeanWrapper <span class="title">instantiateBean</span><span class="params">(<span class="keyword">final</span> String beanName, <span class="keyword">final</span> RootBeanDefinition mbd)</span> </span>&#123;</span><br><span class="line">           <span class="keyword">try</span> &#123;</span><br><span class="line">               Object beanInstance;</span><br><span class="line">               <span class="keyword">final</span> BeanFactory parent = <span class="keyword">this</span>;</span><br><span class="line">               <span class="keyword">if</span> (System.getSecurityManager() != <span class="keyword">null</span>) &#123;</span><br><span class="line">                   beanInstance = AccessController.doPrivileged((PrivilegedAction&lt;Object&gt;) () -&gt;</span><br><span class="line">                           getInstantiationStrategy().instantiate(mbd, beanName, parent),</span><br><span class="line">                           getAccessControlContext());</span><br><span class="line">               &#125;</span><br><span class="line">               <span class="keyword">else</span> &#123;</span><br><span class="line">                   beanInstance = getInstantiationStrategy().instantiate(mbd, beanName, parent);</span><br><span class="line">               &#125;</span><br><span class="line">               BeanWrapper bw = <span class="keyword">new</span> BeanWrapperImpl(beanInstance);</span><br><span class="line">               initBeanWrapper(bw);</span><br><span class="line">               <span class="keyword">return</span> bw;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">               <span class="keyword">throw</span> <span class="keyword">new</span> BeanCreationException(</span><br><span class="line">                       mbd.getResourceDescription(), beanName, <span class="string">"Instantiation of bean failed"</span>, ex);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>在完成属性装配之后执行<strong>initializeBean</strong>方法</p>
+<p>在这里<strong>getInstantiationStrategy()</strong>，通过获取指定的动态代理策略来进行实例化</p>
 </blockquote>
-<p><a href="https://imgchr.com/i/8RvtPg" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/21/8RvtPg.md.png" alt="8RvtPg.md.png"></a></p>
-<p>注意在这里的<strong>getBeanPostProcessors()</strong>并没有选择某些特定的BeanPostProcessor来执行；<br>在装配属性的<strong>populateBean</strong>方法中会指定执行接口，如下所示：<br><img src="https://s1.ax1x.com/2020/03/21/8RzUun.png" alt="8RzUun.png"></p>
-<h2 id="BeanPostProcessor加载时机"><a href="#BeanPostProcessor加载时机" class="headerlink" title="BeanPostProcessor加载时机"></a>BeanPostProcessor加载时机</h2><p>在<strong>AbstractApplicationContext</strong>刷新容器的过程中会执行<strong>registerBeanPostProcessors</strong>方法.这个方法的目的就是将<strong>BeanPostProcessors</strong>子类注册到BeanFactory中，其中还会实现<strong>priority</strong>、<strong>order</strong>等功能进行排序<br><a href="https://s1.ax1x.com/2020/03/21/8WSfMj.png" target="_blank" rel="noopener">8WSfMj.png</a></p>
-<h2 id="常用的BeanPostProcessor子类"><a href="#常用的BeanPostProcessor子类" class="headerlink" title="常用的BeanPostProcessor子类"></a>常用的BeanPostProcessor子类</h2><table>
-<thead>
-<tr>
-<th>类名</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>InstantiationAwareBeanPostProcessorAdapter</td>
-<td>实例化后进行初始化前后执行（可以对属性的装配进行控制）</td>
-</tr>
-<tr>
-<td>ServletContextAwareProcessor</td>
-<td>对servletContext进行处理</td>
-</tr>
-<tr>
-<td>ApplicationContextAwareProcessor</td>
-<td>对容器工具类进行赋值操作，以便后续进行使用（例如注入环境变量这些）</td>
-</tr>
-</tbody></table>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
-<li><strong>BeanPostProcessor</strong> 的作用域是容器级别的，它只和所在的容器相关 ，当 <strong>BeanPostProcessor</strong> 完成注册后，它会应用于所有跟它在同一个容器内的 bean 。</li>
-<li><strong>BeanFactory</strong> 和 <strong>ApplicationContext</strong> 对 <strong>BeanPostProcessor</strong> 的处理不同，ApplicationContext 会自动检测所有实现了 <strong>BeanPostProcessor</strong> 接口的 bean，并完成注册，但是使用 BeanFactory 容器时则需要手动调用 <strong>AbstractBeanFactory#addBeanPostProcessor(BeanPostProcessor beanPostProcessor)</strong> 方法来完成注册</li>
-<li><strong>ApplicationContext</strong> 的 <strong>BeanPostProcessor</strong> 支持 Ordered，而 BeanFactory 的 <strong>BeanPostProcessor</strong> 是不支持的，原因在于ApplicationContext 会对 <strong>BeanPostProcessor</strong> 进行 Ordered 检测并完成排序，而 BeanFactory 中的 <strong>BeanPostProcessor</strong> 只跟注册的顺序有关。</li>
+<ul>
+<li>如何指定使用JDK的proxy？<blockquote>
+<p>spring5中貌似没有找到</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="使用Aware接口"><a href="#使用Aware接口" class="headerlink" title="使用Aware接口"></a>使用Aware接口</h2><p><strong>Aware</strong>接口是一个具有具有感知能力的接口，其主要的子类分别是<strong>BeanNameAware</strong>、<strong>BeanClassLoaderAware</strong>、<strong>BeanFactoryAware</strong>接口，以上三个接口的方法都是在实例化完成后调用<strong>invokeAware</strong>实现</p>
+<h2 id="BeanPostProcessor增强"><a href="#BeanPostProcessor增强" class="headerlink" title="BeanPostProcessor增强"></a>BeanPostProcessor增强</h2><p><strong>BeanPostProcessor</strong>是bean的增强器，是spring容器用于增强全部bean的类。主要是初始化的前置方法和后置方法，主要的子类是<strong>InstantiationAwareBeanPostProcessorAdapter</strong>在初始化前就对bean进行一个预处理，以便进行特殊处理</p>
+<h2 id="init-method"><a href="#init-method" class="headerlink" title="init-method()"></a>init-method()</h2><p>init-method表示的是bean自身定义的初始化方法，只会作用于bean本身的方法。执行时机是在属性赋值后进行执行。主要有</p>
+<ol>
+<li><strong>InitializingBean接口</strong></li>
+<li><strong>@init-method注解</strong></li>
+<li><strong>@PostConstruct</strong>，底层的实现是依赖于<strong>BeanPostProcessor</strong></li>
+</ol>
+<h2 id="DisposableBean"><a href="#DisposableBean" class="headerlink" title="DisposableBean"></a>DisposableBean</h2><p>销毁方法</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>Bean初始化的过程如下：</p>
+<ol start="0">
+<li>InstantiationAwareBeanPostProcessor的前置方法</li>
+<li>实列化<br> 1.1 根据实例化策略选择进行JDK反射或者CGlib反射<br> 1.2 执行InstantiationAwareBeanPostProcessor的后置方法<br> 1.3 bean的属性进行赋值</li>
+<li>Aware接口处理</li>
+<li>BeanProcessors接口的前置处理</li>
+<li>init-method方法进行处理</li>
+<li>BeanProcessors接口的后置处理</li>
+<li>销毁方法</li>
 </ol>
 
       
@@ -442,8 +433,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/03/20/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/14.Aware%E6%8E%A5%E5%8F%A3%E6%89%A9%E5%B1%95%E7%82%B9%E7%9A%84%E5%88%86%E6%9E%90/" rel="next" title="Aware接口扩展点的分析">
-                <i class="fa fa-chevron-left"></i> Aware接口扩展点的分析
+              <a href="/2020/03/22/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/10.%E7%BA%BF%E7%A8%8B%E5%8D%8F%E4%BD%9C/" rel="next" title="线程协作">
+                <i class="fa fa-chevron-left"></i> 线程协作
               </a>
             
           </div>
@@ -451,10 +442,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/03/21/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/16.InitializingBean%E6%89%A9%E5%B1%95%E7%82%B9%E5%88%86%E6%9E%90/" rel="prev" title="InitializingBean扩展点分析">
-                InitializingBean扩展点分析 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -590,7 +577,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#BeanPostProcessor扩展点分析"><span class="nav-number">1.</span> <span class="nav-text">BeanPostProcessor扩展点分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#处理机制"><span class="nav-number">1.1.</span> <span class="nav-text">处理机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BeanPostProcessor加载时机"><span class="nav-number">1.2.</span> <span class="nav-text">BeanPostProcessor加载时机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的BeanPostProcessor子类"><span class="nav-number">1.3.</span> <span class="nav-text">常用的BeanPostProcessor子类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.4.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Bean的生命周期"><span class="nav-number">1.</span> <span class="nav-text">Bean的生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实例化Bean"><span class="nav-number">1.1.</span> <span class="nav-text">实例化Bean</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Aware接口"><span class="nav-number">1.2.</span> <span class="nav-text">使用Aware接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BeanPostProcessor增强"><span class="nav-number">1.3.</span> <span class="nav-text">BeanPostProcessor增强</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#init-method"><span class="nav-number">1.4.</span> <span class="nav-text">init-method()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DisposableBean"><span class="nav-number">1.5.</span> <span class="nav-text">DisposableBean</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>

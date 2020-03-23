@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="spring源代码," />
+  <meta name="keywords" content="线程协作," />
 
 
 
@@ -79,22 +79,17 @@
 
 
 
-<meta name="description" content="BeanPostProcessor扩展点分析 BeanPostProcess接口是在Bean完成实例化后，如果我们要对所有的加载bean进行一些处理或增加配置的接口   BeanPostProcessor.java  1234BeanPostProcessor&amp;#123;    Object postProcessBeforeInitialization(Object bean, String b">
+<meta name="description" content="线程协作线程之间相互协作 信号量线程（semaphore）之间信号量的作用是于标记当前资源能否被线程访问的信号。线程访问资源时尝试用acquire，访问完成使用release归还资源 countDownLatchcountDownLatch的作用是多线程之间的倒计时器，用于多线程之间的协作。有两种用法：  主线程等待其他线程运行完毕后执行 其他线程等待主线程运行完毕后执行  TODO 暂存">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BeanPostProcessor扩展点分析">
-<meta property="og:url" content="http://yoursite.com/2020/03/20/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/15.BeanPostProcessor%E6%89%A9%E5%B1%95%E7%82%B9%E5%88%86%E6%9E%90/index.html">
+<meta property="og:title" content="线程协作">
+<meta property="og:url" content="http://yoursite.com/2020/03/22/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/10.%E7%BA%BF%E7%A8%8B%E5%8D%8F%E4%BD%9C/index.html">
 <meta property="og:site_name" content="agmtopy博客">
-<meta property="og:description" content="BeanPostProcessor扩展点分析 BeanPostProcess接口是在Bean完成实例化后，如果我们要对所有的加载bean进行一些处理或增加配置的接口   BeanPostProcessor.java  1234BeanPostProcessor&amp;#123;    Object postProcessBeforeInitialization(Object bean, String b">
-<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8RTugf.png">
-<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8RvFDx.png">
-<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8RvtPg.md.png">
-<meta property="og:image" content="https://s1.ax1x.com/2020/03/21/8RzUun.png">
-<meta property="article:published_time" content="2020-03-19T16:47:03.000Z">
-<meta property="article:modified_time" content="2020-03-21T03:28:52.868Z">
+<meta property="og:description" content="线程协作线程之间相互协作 信号量线程（semaphore）之间信号量的作用是于标记当前资源能否被线程访问的信号。线程访问资源时尝试用acquire，访问完成使用release归还资源 countDownLatchcountDownLatch的作用是多线程之间的倒计时器，用于多线程之间的协作。有两种用法：  主线程等待其他线程运行完毕后执行 其他线程等待主线程运行完毕后执行  TODO 暂存">
+<meta property="article:published_time" content="2020-03-22T13:53:34.000Z">
+<meta property="article:modified_time" content="2020-03-23T14:12:46.605Z">
 <meta property="article:author" content="agmtopy">
-<meta property="article:tag" content="spring源代码">
+<meta property="article:tag" content="线程协作">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://s1.ax1x.com/2020/03/21/8RTugf.png">
 
 
 
@@ -124,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/03/20/4.spring源代码/15.BeanPostProcessor扩展点分析/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/03/22/2.并发知识/10.线程协作/"/>
 
 
 
 
 
-  <title>BeanPostProcessor扩展点分析 | agmtopy博客</title>
+  <title>线程协作 | agmtopy博客</title>
   
 
 
@@ -247,7 +242,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/20/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/15.BeanPostProcessor%E6%89%A9%E5%B1%95%E7%82%B9%E5%88%86%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/22/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/10.%E7%BA%BF%E7%A8%8B%E5%8D%8F%E4%BD%9C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="agmtopy">
@@ -264,7 +259,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">BeanPostProcessor扩展点分析</h1>
+          <h1 class="post-title" itemprop="name headline">线程协作</h1>
         
 
         <div class="post-meta">
@@ -276,8 +271,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-20T00:47:03+08:00">
-                2020-03-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-22T21:53:34+08:00">
+                2020-03-22
               </time>
             
 
@@ -299,8 +294,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/spring/" itemprop="url" rel="index">
-                    <span itemprop="name">spring</span>
+                  <a href="/categories/java%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index">
+                    <span itemprop="name">java并发</span>
                   </a>
                 </span>
 
@@ -330,7 +325,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  426
+                  131
                 </span>
               
 
@@ -367,52 +362,14 @@
       
 
       
-        <h1 id="BeanPostProcessor扩展点分析"><a href="#BeanPostProcessor扩展点分析" class="headerlink" title="BeanPostProcessor扩展点分析"></a>BeanPostProcessor扩展点分析</h1><blockquote>
-<p>BeanPostProcess接口是在Bean完成实例化后，如果我们要对所有的加载bean进行一些处理或增加配置的接口</p>
-</blockquote>
-<ul>
-<li>BeanPostProcessor.java</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BeanPostProcessor&#123;</span><br><span class="line">    <span class="function">Object <span class="title">postProcessBeforeInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException</span>;</span><br><span class="line">    <span class="function">Object <span class="title">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException</span></span><br><span class="line"><span class="function">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>执行结果</li>
-</ul>
-<p><a href="https://imgchr.com/i/8RTugf" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/21/8RTugf.png" alt="8RTugf.png"></a></p>
-<p>可以看出<strong>BeanPostprocessor</strong>会对每一个bean在初始化前后进行处理</p>
-<h2 id="处理机制"><a href="#处理机制" class="headerlink" title="处理机制"></a>处理机制</h2><p><img src="https://s1.ax1x.com/2020/03/21/8RvFDx.png" alt="8RvFDx.png"></p>
-<blockquote>
-<p>在完成属性装配之后执行<strong>initializeBean</strong>方法</p>
-</blockquote>
-<p><a href="https://imgchr.com/i/8RvtPg" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/03/21/8RvtPg.md.png" alt="8RvtPg.md.png"></a></p>
-<p>注意在这里的<strong>getBeanPostProcessors()</strong>并没有选择某些特定的BeanPostProcessor来执行；<br>在装配属性的<strong>populateBean</strong>方法中会指定执行接口，如下所示：<br><img src="https://s1.ax1x.com/2020/03/21/8RzUun.png" alt="8RzUun.png"></p>
-<h2 id="BeanPostProcessor加载时机"><a href="#BeanPostProcessor加载时机" class="headerlink" title="BeanPostProcessor加载时机"></a>BeanPostProcessor加载时机</h2><p>在<strong>AbstractApplicationContext</strong>刷新容器的过程中会执行<strong>registerBeanPostProcessors</strong>方法.这个方法的目的就是将<strong>BeanPostProcessors</strong>子类注册到BeanFactory中，其中还会实现<strong>priority</strong>、<strong>order</strong>等功能进行排序<br><a href="https://s1.ax1x.com/2020/03/21/8WSfMj.png" target="_blank" rel="noopener">8WSfMj.png</a></p>
-<h2 id="常用的BeanPostProcessor子类"><a href="#常用的BeanPostProcessor子类" class="headerlink" title="常用的BeanPostProcessor子类"></a>常用的BeanPostProcessor子类</h2><table>
-<thead>
-<tr>
-<th>类名</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>InstantiationAwareBeanPostProcessorAdapter</td>
-<td>实例化后进行初始化前后执行（可以对属性的装配进行控制）</td>
-</tr>
-<tr>
-<td>ServletContextAwareProcessor</td>
-<td>对servletContext进行处理</td>
-</tr>
-<tr>
-<td>ApplicationContextAwareProcessor</td>
-<td>对容器工具类进行赋值操作，以便后续进行使用（例如注入环境变量这些）</td>
-</tr>
-</tbody></table>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
-<li><strong>BeanPostProcessor</strong> 的作用域是容器级别的，它只和所在的容器相关 ，当 <strong>BeanPostProcessor</strong> 完成注册后，它会应用于所有跟它在同一个容器内的 bean 。</li>
-<li><strong>BeanFactory</strong> 和 <strong>ApplicationContext</strong> 对 <strong>BeanPostProcessor</strong> 的处理不同，ApplicationContext 会自动检测所有实现了 <strong>BeanPostProcessor</strong> 接口的 bean，并完成注册，但是使用 BeanFactory 容器时则需要手动调用 <strong>AbstractBeanFactory#addBeanPostProcessor(BeanPostProcessor beanPostProcessor)</strong> 方法来完成注册</li>
-<li><strong>ApplicationContext</strong> 的 <strong>BeanPostProcessor</strong> 支持 Ordered，而 BeanFactory 的 <strong>BeanPostProcessor</strong> 是不支持的，原因在于ApplicationContext 会对 <strong>BeanPostProcessor</strong> 进行 Ordered 检测并完成排序，而 BeanFactory 中的 <strong>BeanPostProcessor</strong> 只跟注册的顺序有关。</li>
+        <h1 id="线程协作"><a href="#线程协作" class="headerlink" title="线程协作"></a>线程协作</h1><p>线程之间相互协作</p>
+<h2 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h2><p>线程（semaphore）之间信号量的作用是于标记当前资源能否被线程访问的信号。线程访问资源时尝试用<strong>acquire</strong>，访问完成使用<strong>release</strong>归还资源</p>
+<h2 id="countDownLatch"><a href="#countDownLatch" class="headerlink" title="countDownLatch"></a>countDownLatch</h2><p><strong>countDownLatch</strong>的作用是多线程之间的倒计时器，用于多线程之间的协作。有两种用法：</p>
+<ol>
+<li>主线程等待其他线程运行完毕后执行</li>
+<li>其他线程等待主线程运行完毕后执行</li>
 </ol>
-
+<h2 id="TODO-暂存"><a href="#TODO-暂存" class="headerlink" title="TODO 暂存"></a>TODO 暂存</h2>
       
     </div>
     
@@ -429,7 +386,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/spring%E6%BA%90%E4%BB%A3%E7%A0%81/" rel="tag"># spring源代码</a>
+            <a href="/tags/%E7%BA%BF%E7%A8%8B%E5%8D%8F%E4%BD%9C/" rel="tag"># 线程协作</a>
           
         </div>
       
@@ -442,8 +399,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/03/20/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/14.Aware%E6%8E%A5%E5%8F%A3%E6%89%A9%E5%B1%95%E7%82%B9%E7%9A%84%E5%88%86%E6%9E%90/" rel="next" title="Aware接口扩展点的分析">
-                <i class="fa fa-chevron-left"></i> Aware接口扩展点的分析
+              <a href="/2020/03/22/7.%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E7%9F%A5%E8%AF%86/4.RocketMq%E6%BA%90%E4%BB%A3%E7%A0%81%E4%B9%8BNameServer/" rel="next" title="RocketMq源代码之NameServer">
+                <i class="fa fa-chevron-left"></i> RocketMq源代码之NameServer
               </a>
             
           </div>
@@ -452,8 +409,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/03/21/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/16.InitializingBean%E6%89%A9%E5%B1%95%E7%82%B9%E5%88%86%E6%9E%90/" rel="prev" title="InitializingBean扩展点分析">
-                InitializingBean扩展点分析 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/03/23/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/17.Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" rel="prev" title="Bean的生命周期">
+                Bean的生命周期 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -590,7 +547,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#BeanPostProcessor扩展点分析"><span class="nav-number">1.</span> <span class="nav-text">BeanPostProcessor扩展点分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#处理机制"><span class="nav-number">1.1.</span> <span class="nav-text">处理机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BeanPostProcessor加载时机"><span class="nav-number">1.2.</span> <span class="nav-text">BeanPostProcessor加载时机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的BeanPostProcessor子类"><span class="nav-number">1.3.</span> <span class="nav-text">常用的BeanPostProcessor子类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.4.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线程协作"><span class="nav-number">1.</span> <span class="nav-text">线程协作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#信号量"><span class="nav-number">1.1.</span> <span class="nav-text">信号量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#countDownLatch"><span class="nav-number">1.2.</span> <span class="nav-text">countDownLatch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TODO-暂存"><span class="nav-number">1.3.</span> <span class="nav-text">TODO 暂存</span></a></li></ol></li></ol></div>
             
 
           </div>
