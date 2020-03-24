@@ -79,14 +79,14 @@
 
 
 
-<meta name="description" content="spring调试环境搭建环境依赖 Gradle Git JDK1.8+  clone跳过，下载后导入idea会自动使用Gradle来Build项目 1gradlew :spring-oxm:compileTestJava">
+<meta name="description" content="分析BeanFactoryPostProcessorBeanFactoryPostProcessor是在注册完成BeanDifinition后执行的接口，该接口就只有一个方法postProcessBeanFactory 123public interface BeanFactoryPostProcessor &amp;#123;    void postProcessBeanFactory(Configu">
 <meta property="og:type" content="article">
-<meta property="og:title" content="spring调试环境搭建">
-<meta property="og:url" content="http://yoursite.com/2020/03/17/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/8.spring%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:title" content="分析BeanFactoryPostProcessor">
+<meta property="og:url" content="http://yoursite.com/2020/03/24/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/18.%E5%88%86%E6%9E%90BeanFactoryPostProcessor/index.html">
 <meta property="og:site_name" content="agmtopy博客">
-<meta property="og:description" content="spring调试环境搭建环境依赖 Gradle Git JDK1.8+  clone跳过，下载后导入idea会自动使用Gradle来Build项目 1gradlew :spring-oxm:compileTestJava">
-<meta property="article:published_time" content="2020-03-17T14:14:13.000Z">
-<meta property="article:modified_time" content="2020-03-17T14:42:22.541Z">
+<meta property="og:description" content="分析BeanFactoryPostProcessorBeanFactoryPostProcessor是在注册完成BeanDifinition后执行的接口，该接口就只有一个方法postProcessBeanFactory 123public interface BeanFactoryPostProcessor &amp;#123;    void postProcessBeanFactory(Configu">
+<meta property="article:published_time" content="2020-03-24T14:32:30.000Z">
+<meta property="article:modified_time" content="2020-03-24T15:39:26.881Z">
 <meta property="article:author" content="agmtopy">
 <meta property="article:tag" content="spring源代码">
 <meta name="twitter:card" content="summary">
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/03/17/4.spring源代码/8.spring调试环境搭建/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/03/24/4.spring源代码/18.分析BeanFactoryPostProcessor/"/>
 
 
 
 
 
-  <title>spring调试环境搭建 | agmtopy博客</title>
+  <title>分析BeanFactoryPostProcessor | agmtopy博客</title>
   
 
 
@@ -242,7 +242,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/17/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/8.spring%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/24/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/18.%E5%88%86%E6%9E%90BeanFactoryPostProcessor/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="agmtopy">
@@ -259,7 +259,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">spring调试环境搭建</h1>
+          <h1 class="post-title" itemprop="name headline">分析BeanFactoryPostProcessor</h1>
         
 
         <div class="post-meta">
@@ -271,8 +271,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-17T22:14:13+08:00">
-                2020-03-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-24T22:32:30+08:00">
+                2020-03-24
               </time>
             
 
@@ -325,7 +325,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  36
+                  140
                 </span>
               
 
@@ -362,14 +362,15 @@
       
 
       
-        <h1 id="spring调试环境搭建"><a href="#spring调试环境搭建" class="headerlink" title="spring调试环境搭建"></a>spring调试环境搭建</h1><h2 id="环境依赖"><a href="#环境依赖" class="headerlink" title="环境依赖"></a>环境依赖</h2><ul>
-<li>Gradle</li>
-<li>Git</li>
-<li>JDK1.8+</li>
-</ul>
-<h2 id="clone"><a href="#clone" class="headerlink" title="clone"></a>clone</h2><p>跳过，下载后导入idea会自动使用Gradle来<strong>Build</strong>项目</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gradlew :spring-oxm:compileTestJava</span><br></pre></td></tr></table></figure>
-<h2 id=""><a href="#" class="headerlink" title=""></a></h2>
+        <h1 id="分析BeanFactoryPostProcessor"><a href="#分析BeanFactoryPostProcessor" class="headerlink" title="分析BeanFactoryPostProcessor"></a>分析BeanFactoryPostProcessor</h1><p><strong>BeanFactoryPostProcessor</strong>是在注册完成<strong>BeanDifinition</strong>后执行的接口，该接口就只有一个方法<strong>postProcessBeanFactory</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">BeanFactoryPostProcessor</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">postProcessBeanFactory</span><span class="params">(ConfigurableListableBeanFactory beanFactory)</span> <span class="keyword">throws</span> BeansException</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="子类PropertyPlaceholderConfigurer"><a href="#子类PropertyPlaceholderConfigurer" class="headerlink" title="子类PropertyPlaceholderConfigurer"></a>子类PropertyPlaceholderConfigurer</h2><p><strong>PropertyPlaceholderConfigurer</strong>已过时</p>
+<p><strong>PropertyResourceConfigurer</strong>帮着处理好属性后传入子类的方法进行执行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postProcessBeanFactory</span><span class="params">(ConfigurableListableBeanFactory beanFactory)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		Properties mergedProps = mergeProperties();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Convert the merged properties, if necessary.</span></span><br><span class="line">		convertProperties(mergedProps);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Let the subclass process the properties.</span></span><br><span class="line">		processProperties(beanFactory, mergedProps);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">catch</span> (IOException ex) &#123;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> BeanInitializationException(<span class="string">"Could not load properties"</span>, ex);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>主要用法是用于不同的环境注入不同的环境参数，在springBoot中可以用<strong>envAbstractEnvironment</strong>来进行替代</p>
+
       
     </div>
     
@@ -399,8 +400,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/03/15/7.%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E7%9F%A5%E8%AF%86/3.RocketMQ%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" rel="next" title="RocketMQ特点和组件">
-                <i class="fa fa-chevron-left"></i> RocketMQ特点和组件
+              <a href="/2020/03/23/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/17.Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" rel="next" title="Bean的生命周期">
+                <i class="fa fa-chevron-left"></i> Bean的生命周期
               </a>
             
           </div>
@@ -408,10 +409,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/03/17/4.spring%E6%BA%90%E4%BB%A3%E7%A0%81/9.spring%E6%BA%90%E4%BB%A3%E7%A0%81%E5%9F%BA%E7%A1%80%E5%92%8C%E7%BB%84%E4%BB%B6/" rel="prev" title="spring源代码基础和组件">
-                spring源代码基础和组件 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -547,7 +544,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#spring调试环境搭建"><span class="nav-number">1.</span> <span class="nav-text">spring调试环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境依赖"><span class="nav-number">1.1.</span> <span class="nav-text">环境依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#clone"><span class="nav-number">1.2.</span> <span class="nav-text">clone</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">1.3.</span> <span class="nav-text"></span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#分析BeanFactoryPostProcessor"><span class="nav-number">1.</span> <span class="nav-text">分析BeanFactoryPostProcessor</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#子类PropertyPlaceholderConfigurer"><span class="nav-number">1.1.</span> <span class="nav-text">子类PropertyPlaceholderConfigurer</span></a></li></ol></li></ol></div>
             
 
           </div>
