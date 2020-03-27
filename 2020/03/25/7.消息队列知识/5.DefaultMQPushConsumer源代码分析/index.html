@@ -81,13 +81,13 @@
 
 <meta name="description" content="DefaultMQPushConsumer源代码分析基本使用 DefaultMQPushConsumer是默认进行消费的工具类，类图如下：    1234567public DefaultMQPushConsumer(final String namespace, final String consumerGroup, RPCHook rpcHook,    AllocateMessageQueu">
 <meta property="og:type" content="article">
-<meta property="og:title" content="DefaultMQPushConsumer源代码分析">
+<meta property="og:title" content="Consumer源代码分析">
 <meta property="og:url" content="http://yoursite.com/2020/03/25/7.%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E7%9F%A5%E8%AF%86/5.DefaultMQPushConsumer%E6%BA%90%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="agmtopy博客">
 <meta property="og:description" content="DefaultMQPushConsumer源代码分析基本使用 DefaultMQPushConsumer是默认进行消费的工具类，类图如下：    1234567public DefaultMQPushConsumer(final String namespace, final String consumerGroup, RPCHook rpcHook,    AllocateMessageQueu">
 <meta property="og:image" content="https://s1.ax1x.com/2020/03/25/8x1zJP.png">
 <meta property="article:published_time" content="2020-03-25T14:09:27.000Z">
-<meta property="article:modified_time" content="2020-03-25T17:20:58.140Z">
+<meta property="article:modified_time" content="2020-03-27T14:50:16.958Z">
 <meta property="article:author" content="agmtopy">
 <meta property="article:tag" content="RocketMQ">
 <meta name="twitter:card" content="summary">
@@ -127,7 +127,7 @@
 
 
 
-  <title>DefaultMQPushConsumer源代码分析 | agmtopy博客</title>
+  <title>Consumer源代码分析 | agmtopy博客</title>
   
 
 
@@ -261,7 +261,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">DefaultMQPushConsumer源代码分析</h1>
+          <h1 class="post-title" itemprop="name headline">Consumer源代码分析</h1>
         
 
         <div class="post-meta">
@@ -327,7 +327,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  260
+                  1.2k
                 </span>
               
 
@@ -343,7 +343,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  5
                 </span>
               
             </div>
@@ -380,7 +380,7 @@
 </thead>
 <tbody><tr>
 <td>namespace</td>
-<td>指定producer实例</td>
+<td>指定producer/consumer实例,只有在同一个实例下的消息才能被消费到</td>
 </tr>
 <tr>
 <td>consumerGroup</td>
@@ -412,7 +412,43 @@
 <li>底层调用<strong>NettyRemotingClient</strong>进行网络连接，<strong>特殊的报文结构</strong></li>
 </ol>
 <p>消息的方式是通过“长轮询”的方式进行处理的，通过服务端hold住请求(默认是15s)来实现的</p>
+<h1 id="ConsumerMessageConcurrentlyService源代码分析"><a href="#ConsumerMessageConcurrentlyService源代码分析" class="headerlink" title="ConsumerMessageConcurrentlyService源代码分析"></a>ConsumerMessageConcurrentlyService源代码分析</h1><p>上面讲到如何初始化一个<strong>DefaultMQPushConsumer</strong>,但是在实际执行获取动作的是<strong>ConsumerMessageConcurrentlyService</strong>来进行的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ConsumeMessageConcurrentlyService</span><span class="params">(DefaultMQPushConsumerImpl defaultMQPushConsumerImpl,</span></span></span><br><span class="line"><span class="function"><span class="params">    MessageListenerConcurrently messageListener)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.defaultMQPushConsumerImpl = defaultMQPushConsumerImpl;</span><br><span class="line">    <span class="keyword">this</span>.messageListener = messageListener;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.defaultMQPushConsumer = <span class="keyword">this</span>.defaultMQPushConsumerImpl.getDefaultMQPushConsumer();</span><br><span class="line">    <span class="keyword">this</span>.consumerGroup = <span class="keyword">this</span>.defaultMQPushConsumer.getConsumerGroup();</span><br><span class="line">    <span class="keyword">this</span>.consumeRequestQueue = <span class="keyword">new</span> LinkedBlockingQueue&lt;Runnable&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//1. 创建一个主线程池用来拉去消息</span></span><br><span class="line">    <span class="keyword">this</span>.consumeExecutor = <span class="keyword">new</span> ThreadPoolExecutor(</span><br><span class="line">        <span class="keyword">this</span>.defaultMQPushConsumer.getConsumeThreadMin(),</span><br><span class="line">        <span class="keyword">this</span>.defaultMQPushConsumer.getConsumeThreadMax(),</span><br><span class="line">        <span class="number">1000</span> * <span class="number">60</span>,</span><br><span class="line">        TimeUnit.MILLISECONDS,</span><br><span class="line">        <span class="keyword">this</span>.consumeRequestQueue,</span><br><span class="line">        <span class="keyword">new</span> ThreadFactoryImpl(<span class="string">"ConsumeMessageThread_"</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">//2. 创建一个用来执行推迟消费的线程池</span></span><br><span class="line">    <span class="keyword">this</span>.scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(<span class="keyword">new</span> ThreadFactoryImpl(<span class="string">"ConsumeMessageScheduledThread_"</span>));</span><br><span class="line">    <span class="comment">//3. 定时清理超时的消息</span></span><br><span class="line">    <span class="keyword">this</span>.cleanExpireMsgExecutors = Executors.newSingleThreadScheduledExecutor(<span class="keyword">new</span> ThreadFactoryImpl(<span class="string">"CleanExpireMsgScheduledThread_"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<ul>
+<li>主线程池执行的逻辑<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">submitConsumeRequest</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> List&lt;MessageExt&gt; msgs,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> ProcessQueue processQueue,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> MessageQueue messageQueue,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> <span class="keyword">boolean</span> dispatchToConsume)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> consumeBatchSize = <span class="keyword">this</span>.defaultMQPushConsumer.getConsumeMessageBatchMaxSize();</span><br><span class="line">    <span class="comment">//1. msgs是一批消息，先判断这一批消息是否大于最大处理量</span></span><br><span class="line">    <span class="keyword">if</span> (msgs.size() &lt;= consumeBatchSize) &#123;</span><br><span class="line">        ConsumeRequest consumeRequest = <span class="keyword">new</span> ConsumeRequest(msgs, processQueue, messageQueue);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//2. 放入正常队列执行业务上的消费逻辑</span></span><br><span class="line">            <span class="keyword">this</span>.consumeExecutor.submit(consumeRequest);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (RejectedExecutionException e) &#123;</span><br><span class="line">            <span class="comment">//3. 消费失败，放入延迟等待线程池中</span></span><br><span class="line">            <span class="keyword">this</span>.submitConsumeRequestLater(consumeRequest);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//4. 如果batch消息太多会按照最大消费长度分批进行处理</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> total = <span class="number">0</span>; total &lt; msgs.size(); ) &#123;</span><br><span class="line">            List&lt;MessageExt&gt; msgThis = <span class="keyword">new</span> ArrayList&lt;MessageExt&gt;(consumeBatchSize);</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; consumeBatchSize; i++, total++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (total &lt; msgs.size()) &#123;</span><br><span class="line">                    msgThis.add(msgs.get(total));</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//重复2、3的逻辑</span></span><br><span class="line">            ConsumeRequest consumeRequest = <span class="keyword">new</span> ConsumeRequest(msgThis, processQueue, messageQueue);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">this</span>.consumeExecutor.submit(consumeRequest);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (RejectedExecutionException e) &#123;</span><br><span class="line">                <span class="keyword">for</span> (; total &lt; msgs.size(); total++) &#123;</span><br><span class="line">                    msgThis.add(msgs.get(total));</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">this</span>.submitConsumeRequestLater(consumeRequest);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>消费的逻辑：</p>
+<ol>
+<li>创建三个不同的线程池分别是正常消费的线程池、等待消费的线程池、清理消息的线程池</li>
+<li>判断当前消息数量是否大于最大处理数量</li>
+<li>尝试使用正常消费的线程池进行消费 如果失败 -&gt; 等待消费的线程池</li>
+</ol>
+<h1 id="消费消息的线程池逻辑"><a href="#消费消息的线程池逻辑" class="headerlink" title="消费消息的线程池逻辑"></a>消费消息的线程池逻辑</h1><ul>
+<li><strong>ConsumeRequest</strong></li>
+</ul>
+<ol>
+<li>线程调用消息的处理逻辑，根据消息从处理逻辑返回结果进行下一步操作</li>
+</ol>
+<ul>
+<li><p>调用消息的逻辑</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">ConsumeReturnType returnType = ConsumeReturnType.SUCCESS;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (msgs != <span class="keyword">null</span> &amp;&amp; !msgs.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">for</span> (MessageExt msg : msgs) &#123;</span><br><span class="line">                MessageAccessor.setConsumeStartTimeStamp(msg, String.valueOf(System.currentTimeMillis()));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//listener就是消息的处理逻辑方法</span></span><br><span class="line">        status = listener.consumeMessage(Collections.unmodifiableList(msgs), context);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">        log.warn(<span class="string">"consumeMessage exception: &#123;&#125; Group: &#123;&#125; Msgs: &#123;&#125; MQ: &#123;&#125;"</span>,</span><br><span class="line">            RemotingHelper.exceptionSimpleDesc(e),</span><br><span class="line">            ConsumeMessageConcurrentlyService.<span class="keyword">this</span>.consumerGroup,</span><br><span class="line">            msgs,</span><br><span class="line">            messageQueue);</span><br><span class="line">        hasException = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>处理消息的逻辑</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> (status) &#123;</span><br><span class="line">    <span class="keyword">case</span> CONSUME_SUCCESS:</span><br><span class="line">        <span class="keyword">if</span> (ackIndex &gt;= consumeRequest.getMsgs().size()) &#123;</span><br><span class="line">            ackIndex = consumeRequest.getMsgs().size() - <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> ok = ackIndex + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> failed = consumeRequest.getMsgs().size() - ok;</span><br><span class="line">        <span class="keyword">this</span>.getConsumerStatsManager().incConsumeOKTPS(consumerGroup, consumeRequest.getMessageQueue().getTopic(), ok);</span><br><span class="line">        <span class="keyword">this</span>.getConsumerStatsManager().incConsumeFailedTPS(consumerGroup, consumeRequest.getMessageQueue().getTopic(), failed);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> RECONSUME_LATER:</span><br><span class="line">        ackIndex = -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">this</span>.getConsumerStatsManager().incConsumeFailedTPS(consumerGroup, consumeRequest.getMessageQueue().getTopic(),</span><br><span class="line">            consumeRequest.getMsgs().size());</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">switch</span> (<span class="keyword">this</span>.defaultMQPushConsumer.getMessageModel()) &#123;</span><br><span class="line">    <span class="keyword">case</span> BROADCASTING:</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = ackIndex + <span class="number">1</span>; i &lt; consumeRequest.getMsgs().size(); i++) &#123;</span><br><span class="line">            MessageExt msg = consumeRequest.getMsgs().get(i);</span><br><span class="line">            log.warn(<span class="string">"BROADCASTING, the message consume failed, drop it, &#123;&#125;"</span>, msg.toString());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> CLUSTERING:</span><br><span class="line">        List&lt;MessageExt&gt; msgBackFailed = <span class="keyword">new</span> ArrayList&lt;MessageExt&gt;(consumeRequest.getMsgs().size());</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = ackIndex + <span class="number">1</span>; i &lt; consumeRequest.getMsgs().size(); i++) &#123;</span><br><span class="line">            MessageExt msg = consumeRequest.getMsgs().get(i);</span><br><span class="line">            <span class="keyword">boolean</span> result = <span class="keyword">this</span>.sendMessageBack(msg, context);</span><br><span class="line">            <span class="keyword">if</span> (!result) &#123;</span><br><span class="line">                msg.setReconsumeTimes(msg.getReconsumeTimes() + <span class="number">1</span>);</span><br><span class="line">                msgBackFailed.add(msg);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>将不同返回值的消息写入不同的队列中</li>
+<li>根据不同的消费方式做不同的处理<br> 2.1 广播模式 消费不成功不处理<br> 2.2 集群模式消费不成功，推送broker，让broker通知其他consumer进行消费，还是失败进入延迟队列</li>
+</ol>
+<h1 id="ProcessQueue"><a href="#ProcessQueue" class="headerlink" title="ProcessQueue"></a>ProcessQueue</h1><p><strong>ProcessQueue</strong>是consumer中每一个MessageQueue所对应的队列消耗快照。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ReadWriteLock lockTreeMap = <span class="keyword">new</span> ReentrantReadWriteLock();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> TreeMap&lt;Long, MessageExt&gt; msgTreeMap = <span class="keyword">new</span> TreeMap&lt;Long, MessageExt&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>主要是由一个TreeMep和ReadWriteLock锁组成，TreeMap里以MessageQueue的Offset作为Key，以消息内容的引用为Value，保存了所有从MessageQueue获取到但是还未被处理的消息，读写锁控制着多个线程对TreeMap对象的并发访问。</p>
+<h1 id="MessageQueue的分析"><a href="#MessageQueue的分析" class="headerlink" title="MessageQueue的分析"></a>MessageQueue的分析</h1>
       
     </div>
     
@@ -451,6 +487,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/27/7.%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E7%9F%A5%E8%AF%86/6.MessageQueue%E7%9A%84%E5%88%86%E6%9E%90/" rel="prev" title="MessageQueue的分析">
+                MessageQueue的分析 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -531,7 +571,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-count">45</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -586,7 +626,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#DefaultMQPushConsumer源代码分析"><span class="nav-number">1.</span> <span class="nav-text">DefaultMQPushConsumer源代码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本使用"><span class="nav-number">1.1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#底层原理"><span class="nav-number">1.2.</span> <span class="nav-text">底层原理</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#DefaultMQPushConsumer源代码分析"><span class="nav-number">1.</span> <span class="nav-text">DefaultMQPushConsumer源代码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本使用"><span class="nav-number">1.1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#底层原理"><span class="nav-number">1.2.</span> <span class="nav-text">底层原理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ConsumerMessageConcurrentlyService源代码分析"><span class="nav-number">2.</span> <span class="nav-text">ConsumerMessageConcurrentlyService源代码分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#消费消息的线程池逻辑"><span class="nav-number">3.</span> <span class="nav-text">消费消息的线程池逻辑</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ProcessQueue"><span class="nav-number">4.</span> <span class="nav-text">ProcessQueue</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MessageQueue的分析"><span class="nav-number">5.</span> <span class="nav-text">MessageQueue的分析</span></a></li></ol></div>
             
 
           </div>
@@ -620,7 +660,7 @@
     
       <span class="post-meta-item-text">网站总字数&#58;</span>
     
-    <span title="网站总字数">32.8k</span>
+    <span title="网站总字数">34.2k</span>
   
 </div>
 
