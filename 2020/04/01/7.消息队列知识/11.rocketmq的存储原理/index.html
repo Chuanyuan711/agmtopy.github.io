@@ -88,8 +88,9 @@
 <meta property="og:image" content="https://s1.ax1x.com/2020/04/02/GtBXlQ.png">
 <meta property="og:image" content="https://s1.ax1x.com/2020/04/02/GtBcFK.png">
 <meta property="og:image" content="https://s1.ax1x.com/2020/04/03/GtRo0e.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/04/G061xI.png">
 <meta property="article:published_time" content="2020-04-01T13:53:55.000Z">
-<meta property="article:modified_time" content="2020-04-02T17:23:34.552Z">
+<meta property="article:modified_time" content="2020-04-04T16:54:55.205Z">
 <meta property="article:author" content="agmtopy">
 <meta property="article:tag" content="RocketMQ">
 <meta name="twitter:card" content="summary">
@@ -329,7 +330,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  453
+                  1.2k
                 </span>
               
 
@@ -345,7 +346,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  5
                 </span>
               
             </div>
@@ -383,7 +384,7 @@
 <ol>
 <li>对消息进行处理(消息预处理、延时消息处理)<br>包括消息的预处理(set一些属性值)、处理延时消息(隐藏真实topic放入延时队列的topic中)</li>
 <li>获取到当前正在激活的文件<br>这一步指的是，获取到当前正在使用的文件并转化成为<strong>MappedFile</strong>文件</li>
-<li>获取到文件锁<br>获取到文件锁，保证文件是独占的<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> PutMessageLock putMessageLock;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">putMessageLock.lock();</span><br></pre></td></tr></table></figure></li>
+<li>获取到文件锁<br>获取到文件锁，保证文件在写入时是独占的<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> PutMessageLock putMessageLock;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">putMessageLock.lock();</span><br></pre></td></tr></table></figure></li>
 <li>将消息追加到文件<strong>MappedFile</strong>中</li>
 <li>执行刷盘操作</li>
 <li>执行同步操作</li>
@@ -402,7 +403,42 @@
 <li>获取当前消息的偏移量</li>
 <li>将数据写入<strong>ByteBuffer</strong>中，完成写入操作</li>
 </ol>
-<h3 id="刷盘操作-handleDiskFlush"><a href="#刷盘操作-handleDiskFlush" class="headerlink" title="刷盘操作() - handleDiskFlush"></a>刷盘操作() - handleDiskFlush</h3>
+<h3 id="刷盘操作-handleDiskFlush"><a href="#刷盘操作-handleDiskFlush" class="headerlink" title="刷盘操作() - handleDiskFlush"></a>刷盘操作() - <strong>handleDiskFlush</strong></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleDiskFlush</span><span class="params">(AppendMessageResult result, PutMessageResult putMessageResult, MessageExt messageExt)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 同步刷新</span></span><br><span class="line">        <span class="keyword">if</span> (FlushDiskType.SYNC_FLUSH == <span class="keyword">this</span>.defaultMessageStore.getMessageStoreConfig().getFlushDiskType()) &#123;</span><br><span class="line">            <span class="keyword">final</span> GroupCommitService service = (GroupCommitService) <span class="keyword">this</span>.flushCommitLogService;</span><br><span class="line">            <span class="comment">//等待刷新失败</span></span><br><span class="line">            <span class="keyword">if</span> (messageExt.isWaitStoreMsgOK()) &#123;</span><br><span class="line">              <span class="comment">//省略代码</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//执行刷新方法</span></span><br><span class="line">                service.wakeup();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 异步刷新</span></span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//执行事务消息的刷新</span></span><br><span class="line">            <span class="keyword">if</span> (!<span class="keyword">this</span>.defaultMessageStore.getMessageStoreConfig().isTransientStorePoolEnable()) &#123;</span><br><span class="line">                flushCommitLogService.wakeup();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//执行异步消息的刷新</span></span><br><span class="line">                commitLogService.wakeup();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>时序图<br><img src="https://s1.ax1x.com/2020/04/04/G061xI.png" alt="G061xI.png"></li>
+</ul>
+<p>从图中可以看出</p>
+<ol>
+<li>同步刷盘的策略<br>在<strong>1.1 putRequest</strong>方法中调用刷盘方法，然后等待<strong>1.2 future</strong>方法返回结果</li>
+</ol>
+<ul>
+<li>putRequest</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">putRequest</span><span class="params">(<span class="keyword">final</span> GroupCommitRequest request)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>.requestsWrite) &#123;</span><br><span class="line">        <span class="keyword">this</span>.requestsWrite.add(request);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (hasNotified.compareAndSet(<span class="keyword">false</span>, <span class="keyword">true</span>)) &#123;</span><br><span class="line">        waitPoint.countDown(); <span class="comment">// notify</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>putRequest</strong>将<strong>GroupCommitRequest</strong>add进<strong>*GroupCommitService.list</strong>的集合中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doCommit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//采用读list和写list分离的策略</span></span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>.requestsRead) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.requestsRead.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">for</span> (GroupCommitRequest req : <span class="keyword">this</span>.requestsRead) &#123;</span><br><span class="line">                <span class="comment">// 下一个文件中也可能有一条消息，因此要多刷新两次</span></span><br><span class="line">                <span class="keyword">boolean</span> flushOK = <span class="keyword">false</span>;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">2</span> &amp;&amp; !flushOK; i++) &#123;</span><br><span class="line">                    flushOK = CommitLog.<span class="keyword">this</span>.mappedFileQueue.getFlushedWhere() &gt;= req.getNextOffset();</span><br><span class="line">                    <span class="keyword">if</span> (!flushOK) &#123;</span><br><span class="line">                        CommitLog.<span class="keyword">this</span>.mappedFileQueue.flush(<span class="number">0</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                req.wakeupCustomer(flushOK);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//flush</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">flush</span><span class="params">(<span class="keyword">final</span> <span class="keyword">int</span> flushLeastPages)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> result = <span class="keyword">true</span>;</span><br><span class="line">    MappedFile mappedFile = <span class="keyword">this</span>.findMappedFileByOffset(<span class="keyword">this</span>.flushedWhere, <span class="keyword">this</span>.flushedWhere == <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (mappedFile != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">long</span> tmpTimeStamp = mappedFile.getStoreTimestamp();</span><br><span class="line">        <span class="keyword">int</span> offset = mappedFile.flush(flushLeastPages);</span><br><span class="line">        <span class="keyword">long</span> where = mappedFile.getFileFromOffset() + offset;</span><br><span class="line">        result = where == <span class="keyword">this</span>.flushedWhere;</span><br><span class="line">        <span class="keyword">this</span>.flushedWhere = where;</span><br><span class="line">        <span class="keyword">if</span> (<span class="number">0</span> == flushLeastPages) &#123;</span><br><span class="line">            <span class="keyword">this</span>.storeTimestamp = tmpTimeStamp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//mappedByteBuffer.force</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">flush</span><span class="params">(<span class="keyword">final</span> <span class="keyword">int</span> flushLeastPages)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.isAbleToFlush(flushLeastPages)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.hold()) &#123;</span><br><span class="line">            <span class="keyword">int</span> value = getReadPosition();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">//We only append data to fileChannel or mappedByteBuffer, never both.</span></span><br><span class="line">                <span class="keyword">if</span> (writeBuffer != <span class="keyword">null</span> || <span class="keyword">this</span>.fileChannel.position() != <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="keyword">this</span>.fileChannel.force(<span class="keyword">false</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">this</span>.mappedByteBuffer.force();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">                log.error(<span class="string">"Error occurred when force data to disk."</span>, e);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">this</span>.flushedPosition.set(value);</span><br><span class="line">            <span class="keyword">this</span>.release();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            log.warn(<span class="string">"in flush, hold failed, flush offset = "</span> + <span class="keyword">this</span>.flushedPosition.get());</span><br><span class="line">            <span class="keyword">this</span>.flushedPosition.set(getReadPosition());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.getFlushedPosition();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>可以看到同步刷盘的步骤是</p>
+<p>i. <strong>GroupCommitService.doCommit()</strong><br>ii. <strong>mappedFile.flush()</strong><br>iii. <strong>mappedByteBuffer.force()</strong></p>
+<blockquote>
+<p>同步刷盘的简单描述就是，消息生产者在消息服务端将消息内容追加到内存映射文件中（内存）后，需要同步将内存的内容立刻刷写到磁盘。通过调用内存映射文件（MappedByteBuffer的force方法）可将内存中的数据写入磁盘。</p>
+</blockquote>
+<ol start="2">
+<li>异步有缓冲区刷盘的策略是执行<strong>1.4 flushCommitLogService.wakeup</strong>没有临时缓冲区</li>
+<li>异步无缓冲区刷盘的策略是执行<strong>1.5 commitLogService.wakeup</strong>有临时缓冲区</li>
+</ol>
+<p>分析一下异步刷盘的方法有两种：<br>一种是启用<strong>transientStorePoolEnable</strong>这种会先将数据写到堆外内存上，在由堆外内存写到<strong>PageCache</strong>，然后在有<strong>PageCache</strong>刷盘到磁盘上。</p>
+<p>一种是消息直接追加到与物理文件直接映射的内存中，然后刷写到磁盘中</p>
+<h3 id="刷盘的总结"><a href="#刷盘的总结" class="headerlink" title="刷盘的总结"></a>刷盘的总结</h3><ol>
+<li><p>同步刷盘依次是<strong>GroupCommitService.doCommit</strong> -&gt; <strong>mappedFile.flush()</strong> -&gt;<strong>mappedByteBuffer.force()</strong></p>
+</li>
+<li><p>异步刷盘又分为<br> 2.1 有缓冲区：消息先进入文件缓冲区，在文件缓冲区等待2s后在进入内存映射区 -&gt;最后内存映射刷入磁盘<br> 2.2 无缓冲区：消息直接进入内存映射区 -&gt; 最后刷入磁盘文件中</p>
+</li>
+</ol>
+
       
     </div>
     
@@ -576,7 +612,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#rocketmq的存储原理"><span class="nav-number">1.</span> <span class="nav-text">rocketmq的存储原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#消息如何实现存储的？"><span class="nav-number">1.1.</span> <span class="nav-text">消息如何实现存储的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写入commitLog文件"><span class="nav-number">1.2.</span> <span class="nav-text">写入commitLog文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#appendMessage-追加文件的方法"><span class="nav-number">1.2.1.</span> <span class="nav-text">appendMessage() - 追加文件的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#刷盘操作-handleDiskFlush"><span class="nav-number">1.2.2.</span> <span class="nav-text">刷盘操作() - handleDiskFlush</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#rocketmq的存储原理"><span class="nav-number">1.</span> <span class="nav-text">rocketmq的存储原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#消息如何实现存储的？"><span class="nav-number">1.1.</span> <span class="nav-text">消息如何实现存储的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写入commitLog文件"><span class="nav-number">1.2.</span> <span class="nav-text">写入commitLog文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#appendMessage-追加文件的方法"><span class="nav-number">1.2.1.</span> <span class="nav-text">appendMessage() - 追加文件的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#刷盘操作-handleDiskFlush"><span class="nav-number">1.2.2.</span> <span class="nav-text">刷盘操作() - handleDiskFlush</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#刷盘的总结"><span class="nav-number">1.2.3.</span> <span class="nav-text">刷盘的总结</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -610,7 +646,7 @@
     
       <span class="post-meta-item-text">网站总字数&#58;</span>
     
-    <span title="网站总字数">37.1k</span>
+    <span title="网站总字数">37.8k</span>
   
 </div>
 
