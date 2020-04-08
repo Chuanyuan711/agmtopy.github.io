@@ -90,7 +90,7 @@
 <meta property="og:image" content="https://s1.ax1x.com/2020/04/03/GtRo0e.jpg">
 <meta property="og:image" content="https://s1.ax1x.com/2020/04/04/G061xI.png">
 <meta property="article:published_time" content="2020-04-01T13:53:55.000Z">
-<meta property="article:modified_time" content="2020-04-04T16:54:55.205Z">
+<meta property="article:modified_time" content="2020-04-07T16:09:43.074Z">
 <meta property="article:author" content="agmtopy">
 <meta property="article:tag" content="RocketMQ">
 <meta name="twitter:card" content="summary">
@@ -330,7 +330,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.2k
+                  1.7k
                 </span>
               
 
@@ -346,7 +346,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5
+                  7
                 </span>
               
             </div>
@@ -438,6 +438,32 @@
 <li><p>异步刷盘又分为<br> 2.1 有缓冲区：消息先进入文件缓冲区，在文件缓冲区等待2s后在进入内存映射区 -&gt;最后内存映射刷入磁盘<br> 2.2 无缓冲区：消息直接进入内存映射区 -&gt; 最后刷入磁盘文件中</p>
 </li>
 </ol>
+<h2 id="rocketmq的内存映射"><a href="#rocketmq的内存映射" class="headerlink" title="rocketmq的内存映射"></a>rocketmq的内存映射</h2><p><strong>MappedFile</strong>文件是rockedmq内存映射文件的具体表现，先看一下如何查找</p>
+<h3 id="查找MappedFile的方法"><a href="#查找MappedFile的方法" class="headerlink" title="查找MappedFile的方法"></a>查找<strong>MappedFile</strong>的方法</h3><ul>
+<li>通过时间戳来进行查找</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> MappedFile <span class="title">getMappedFileByTime</span><span class="params">(<span class="keyword">final</span> <span class="keyword">long</span> timestamp)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//获取到全部MappedFile文件</span></span><br><span class="line">        Object[] mfs = <span class="keyword">this</span>.copyMappedFiles(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> == mfs)</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mfs.length; i++) &#123;</span><br><span class="line">            MappedFile mappedFile = (MappedFile) mfs[i];</span><br><span class="line">            <span class="comment">//根据传入的时间戳，查询第一个更新时间大于传入时间戳的文件</span></span><br><span class="line">            <span class="keyword">if</span> (mappedFile.getLastModifiedTimestamp() &gt;= timestamp) &#123;</span><br><span class="line">                <span class="keyword">return</span> mappedFile;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (MappedFile) mfs[mfs.length - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>根据偏移量来查询</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> index = (<span class="keyword">int</span>) ((offset / <span class="keyword">this</span>.mappedFileSize) - (firstMappedFile.getFileFromOffset() / <span class="keyword">this</span>.mappedFileSize));</span><br><span class="line">    MappedFile targetFile = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        targetFile = <span class="keyword">this</span>.mappedFiles.get(index);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception ignored) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//判断根据offset计算出来的index是否有对应的文件</span></span><br><span class="line">    <span class="comment">//因为MappedFile文件可能被修改，因此要再次检查一遍文件的offset是否符合</span></span><br><span class="line">    <span class="keyword">if</span> (targetFile != <span class="keyword">null</span> &amp;&amp; offset &gt;= targetFile.getFileFromOffset()</span><br><span class="line">        &amp;&amp; offset &lt; targetFile.getFileFromOffset() + <span class="keyword">this</span>.mappedFileSize) &#123;</span><br><span class="line">        <span class="keyword">return</span> targetFile;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//如果不符合就需要遍历循环一次</span></span><br><span class="line">    <span class="keyword">for</span> (MappedFile tmpMappedFile : <span class="keyword">this</span>.mappedFiles) &#123;</span><br><span class="line">        <span class="keyword">if</span> (offset &gt;= tmpMappedFile.getFileFromOffset()</span><br><span class="line">            &amp;&amp; offset &lt; tmpMappedFile.getFileFromOffset() + <span class="keyword">this</span>.mappedFileSize) &#123;</span><br><span class="line">            <span class="keyword">return</span> tmpMappedFile;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="MappFile文件的作用"><a href="#MappFile文件的作用" class="headerlink" title="MappFile文件的作用"></a>MappFile文件的作用</h3><p>提交数据的方法主要有<strong>commit</strong>、<strong>commit0</strong>，commit()主要是调用<strong>commit0（）</strong></p>
+<ul>
+<li><strong>commit0</strong></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">commit0</span><span class="params">(<span class="keyword">final</span> <span class="keyword">int</span> commitLeastPages)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> writePos = <span class="keyword">this</span>.wrotePosition.get();</span><br><span class="line">    <span class="keyword">int</span> lastCommittedPosition = <span class="keyword">this</span>.committedPosition.get();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (writePos - <span class="keyword">this</span>.committedPosition.get() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ByteBuffer byteBuffer = writeBuffer.slice();</span><br><span class="line">            byteBuffer.position(lastCommittedPosition);</span><br><span class="line">            byteBuffer.limit(writePos);</span><br><span class="line">            <span class="comment">//关键代码</span></span><br><span class="line">            <span class="keyword">this</span>.fileChannel.position(lastCommittedPosition);</span><br><span class="line">            <span class="keyword">this</span>.fileChannel.write(byteBuffer);</span><br><span class="line">            <span class="keyword">this</span>.committedPosition.set(writePos);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">            log.error(<span class="string">"Error occurred when commit data to FileChannel."</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>commit0</strong></p>
+<ol>
+<li>首先创建writeBuffer的共享缓存区，然后将新创建的position回退到上一次提交的位置（committedPosition），设置limit为wrotePosition（当前最大有效数据指针）</li>
+<li>把commitedPosition到wrotePosition的数据复制（写入）到File Channel中，然后更新committedPosition指针为wrotePosition。</li>
+</ol>
+<p>commit的作用就是将Mapped File#-writeBuffer中的数据提交到文件通道FileChannel中。</p>
+<blockquote>
+<p>ByteBuffer使用技巧：slice（）方法创建一个共享缓存区，与原先的ByteBuffer共享内存但维护一套独立的指针（position、mark、limit）</p>
+</blockquote>
 
       
     </div>
@@ -612,7 +638,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#rocketmq的存储原理"><span class="nav-number">1.</span> <span class="nav-text">rocketmq的存储原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#消息如何实现存储的？"><span class="nav-number">1.1.</span> <span class="nav-text">消息如何实现存储的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写入commitLog文件"><span class="nav-number">1.2.</span> <span class="nav-text">写入commitLog文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#appendMessage-追加文件的方法"><span class="nav-number">1.2.1.</span> <span class="nav-text">appendMessage() - 追加文件的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#刷盘操作-handleDiskFlush"><span class="nav-number">1.2.2.</span> <span class="nav-text">刷盘操作() - handleDiskFlush</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#刷盘的总结"><span class="nav-number">1.2.3.</span> <span class="nav-text">刷盘的总结</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#rocketmq的存储原理"><span class="nav-number">1.</span> <span class="nav-text">rocketmq的存储原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#消息如何实现存储的？"><span class="nav-number">1.1.</span> <span class="nav-text">消息如何实现存储的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写入commitLog文件"><span class="nav-number">1.2.</span> <span class="nav-text">写入commitLog文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#appendMessage-追加文件的方法"><span class="nav-number">1.2.1.</span> <span class="nav-text">appendMessage() - 追加文件的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#刷盘操作-handleDiskFlush"><span class="nav-number">1.2.2.</span> <span class="nav-text">刷盘操作() - handleDiskFlush</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#刷盘的总结"><span class="nav-number">1.2.3.</span> <span class="nav-text">刷盘的总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rocketmq的内存映射"><span class="nav-number">1.3.</span> <span class="nav-text">rocketmq的内存映射</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查找MappedFile的方法"><span class="nav-number">1.3.1.</span> <span class="nav-text">查找MappedFile的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MappFile文件的作用"><span class="nav-number">1.3.2.</span> <span class="nav-text">MappFile文件的作用</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -646,7 +672,7 @@
     
       <span class="post-meta-item-text">网站总字数&#58;</span>
     
-    <span title="网站总字数">37.8k</span>
+    <span title="网站总字数">39.1k</span>
   
 </div>
 

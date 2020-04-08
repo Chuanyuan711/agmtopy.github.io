@@ -89,7 +89,7 @@
 <meta property="og:image" content="https://s1.ax1x.com/2020/03/29/GZ57WR.png">
 <meta property="og:image" content="https://s1.ax1x.com/2020/03/29/GZIufs.png">
 <meta property="article:published_time" content="2020-03-22T13:53:34.000Z">
-<meta property="article:modified_time" content="2020-03-29T14:58:59.868Z">
+<meta property="article:modified_time" content="2020-04-08T16:34:45.968Z">
 <meta property="article:author" content="agmtopy">
 <meta property="article:tag" content="线程协作">
 <meta name="twitter:card" content="summary">
@@ -329,7 +329,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  598
+                  803
                 </span>
               
 
@@ -345,7 +345,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  3
                 </span>
               
             </div>
@@ -395,6 +395,10 @@
 <li>执行结果</li>
 </ul>
 <p><img src="https://s1.ax1x.com/2020/03/29/GZIufs.png" alt="GZIufs.png"></p>
+<h2 id="Condittion"><a href="#Condittion" class="headerlink" title="Condittion"></a>Condittion</h2><p><strong>Condittion</strong>能让不同线程之间相互协作，等待满足条件后继续执行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConditionDemo</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">    <span class="keyword">private</span> Condition condition = lock.newCondition();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        ConditionDemo conditionDemo = <span class="keyword">new</span> ConditionDemo();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt;&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                conditionDemo.method1();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        conditionDemo.method0();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method0</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        lock.lock();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">":条件未准备完毕..."</span>);</span><br><span class="line">            condition.await();</span><br><span class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">":开始执行..."</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        lock.lock();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">":条件准备完毕..."</span>);</span><br><span class="line">            condition.signal();</span><br><span class="line">        &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Condition</strong>是lock锁提供的一种可供线程之间进行交互的一种方法。由于<strong>signal</strong>底层会使用到当前线程和lock锁的持有线程进行对比，相等才会进行唤醒其他线程。</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
 <li><p><strong>semaphore</strong><br>信号量的作用是只有获得信号量的线程才能<strong>执行</strong>，其余线程只能等待持有信号量的线程释放后才有机会执行。</p>
 </li>
@@ -581,7 +585,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线程协作"><span class="nav-number">1.</span> <span class="nav-text">线程协作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#信号量"><span class="nav-number">1.1.</span> <span class="nav-text">信号量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#countDownLatch"><span class="nav-number">1.2.</span> <span class="nav-text">countDownLatch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CyclicBarriar"><span class="nav-number">1.3.</span> <span class="nav-text">CyclicBarriar</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线程协作"><span class="nav-number">1.</span> <span class="nav-text">线程协作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#信号量"><span class="nav-number">1.1.</span> <span class="nav-text">信号量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#countDownLatch"><span class="nav-number">1.2.</span> <span class="nav-text">countDownLatch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CyclicBarriar"><span class="nav-number">1.3.</span> <span class="nav-text">CyclicBarriar</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Condittion"><span class="nav-number">1.4.</span> <span class="nav-text">Condittion</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
@@ -615,7 +619,7 @@
     
       <span class="post-meta-item-text">网站总字数&#58;</span>
     
-    <span title="网站总字数">37.8k</span>
+    <span title="网站总字数">39.1k</span>
   
 </div>
 
