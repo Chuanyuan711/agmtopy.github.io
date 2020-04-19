@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="agmtopy博客">
 <meta property="og:description" content="mybatis方法重载问题在mapper接口中不能重载方法，网上解释大部分的原因是因为mybatis使用package+Mapper+method全限名作为key，在xml中去寻找唯一的sql来执行时候会发生冲突。以上这样原因的解释是正确的，但是现在网上对这个结果的描述是在启动时会抛出异常，在mybatis-spring-boot-starter.2.1.0的版本中并未发现异常，查看源代码发现在解">
 <meta property="article:published_time" content="2020-04-18T01:27:07.000Z">
-<meta property="article:modified_time" content="2020-04-19T15:55:54.725Z">
+<meta property="article:modified_time" content="2020-04-19T15:58:15.701Z">
 <meta property="article:author" content="agmtopy">
 <meta property="article:tag" content="mybatis">
 <meta name="twitter:card" content="summary">
@@ -325,7 +325,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  284
+                  348
                 </span>
               
 
@@ -368,6 +368,7 @@
 深入分析原因是由于mybatis-boot在启动的时候初始化<strong>SqlSessionFactory</strong>的方式为<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> SqlSessionFactory <span class="title">build</span><span class="params">(Configuration config)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> DefaultSqlSessionFactory(config);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 解析好配置后进行初始化，并不是mybatis来进行配置文件的解析的，如果是mybatis进行配置文件的解析会在初始化的过程中抛出异常。</li>
 </ul>
+<p>深入分析其实在mybatis中不应该定义方法的重载，重载的本质是方法签名不同从而产生不同的结果，但是在ORM中如果方法签名最好不要混用相同的方法名称。</p>
 
       
     </div>
@@ -576,7 +577,7 @@
     
       <span class="post-meta-item-text">网站总字数&#58;</span>
     
-    <span title="网站总字数">41.2k</span>
+    <span title="网站总字数">41.3k</span>
   
 </div>
 
