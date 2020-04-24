@@ -240,7 +240,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/24/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/3.%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/27/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/5.%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="agmtopy">
@@ -259,7 +259,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/02/24/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/3.%E7%BA%BF%E7%A8%8B%E6%B1%A0/" itemprop="url">线程池</a></h1>
+                <a class="post-title-link" href="/2017/03/27/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/5.%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/" itemprop="url">并发容器</a></h1>
         
 
         <div class="post-meta">
@@ -271,8 +271,587 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-24T20:59:42+08:00">
-                2020-02-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-27T20:59:40+08:00">
+                2017-03-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index">
+                    <span itemprop="name">java并发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  442
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          并发容器有关并发的容器：HashMap、ConcurrentHashMap、CopyOnWriteArrayList
+HashMapHashMap在并发场景时候存在几个问题：
+
+get()方法在容器扩容时，获取到的值可能会不正确。因为在扩容时候，hashMap没有保证容器安全性，可能会出现get()
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/03/27/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/5.%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/16/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/4.%E9%94%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="agmtopy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://lh3.googleusercontent.com/a-/AOh14GgpoPhwzcSUZRZB6lHH_maq8ImUPog4tGdED1r5=s96-cc-rg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="agmtopy博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/03/16/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/4.%E9%94%81/" itemprop="url">锁</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-16T21:10:39+08:00">
+                2017-03-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java%E5%B9%B6%E5%8F%91/" itemprop="url" rel="index">
+                    <span itemprop="name">java并发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          锁关于java中锁的有关知识，例如有锁的种类、乐观锁和悲观锁的定义、synchronized和lock的特点、公平锁和非公平锁、读写锁ReadWriteLock、自旋锁、jvm对锁的优化
+锁的分类java中按照特定可以将锁划分为7个特性：
+
+偏向锁/轻量级锁/重量级锁
+可重入锁/不可重入锁
+共享锁/
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/03/16/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/4.%E9%94%81/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/04/9.%E6%B3%A8%E9%9F%B3%E8%AF%8D%E5%85%B8/%E6%B3%A8%E9%9F%B3%E8%AF%8D%E5%85%B8-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="agmtopy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://lh3.googleusercontent.com/a-/AOh14GgpoPhwzcSUZRZB6lHH_maq8ImUPog4tGdED1r5=s96-cc-rg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="agmtopy博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/03/04/9.%E6%B3%A8%E9%9F%B3%E8%AF%8D%E5%85%B8/%E6%B3%A8%E9%9F%B3%E8%AF%8D%E5%85%B8-1/" itemprop="url">注音词典(一)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-04T21:09:33+08:00">
+                2017-03-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%8B%B1%E6%96%87%E5%8F%91%E9%9F%B3/" itemprop="url" rel="index">
+                    <span itemprop="name">英文发音</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  413
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          注音词典
+
+
+英文
+读音
+中文
+音标
+
+
+
+transaction
+穿事安可型
+事务
+ˈzak-,tranˈsakSHən
+
+
+template
+谈普冷特
+模板
+ˈtemplət
+
+
+reflect
+瑞富来客特
+反射
+riˈflekt
+
+
+method
+麦舍得
+方法
+ˈmeTHəd
+
+
+interc
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/03/04/9.%E6%B3%A8%E9%9F%B3%E8%AF%8D%E5%85%B8/%E6%B3%A8%E9%9F%B3%E8%AF%8D%E5%85%B8-1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/02/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/3.%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="agmtopy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://lh3.googleusercontent.com/a-/AOh14GgpoPhwzcSUZRZB6lHH_maq8ImUPog4tGdED1r5=s96-cc-rg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="agmtopy博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/03/02/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/3.%E7%BA%BF%E7%A8%8B%E6%B1%A0/" itemprop="url">线程池</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-02T20:59:42+08:00">
+                2017-03-02
               </time>
             
 
@@ -370,7 +949,7 @@
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/02/24/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/3.%E7%BA%BF%E7%A8%8B%E6%B1%A0/#more" rel="contents">
+            <a class="btn" href="/2017/03/02/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/3.%E7%BA%BF%E7%A8%8B%E6%B1%A0/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -421,7 +1000,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/23/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/2.%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/27/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/2.%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="agmtopy">
@@ -440,7 +1019,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/02/23/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/2.%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/" itemprop="url">线程安全</a></h1>
+                <a class="post-title-link" href="/2017/02/27/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/2.%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/" itemprop="url">线程安全</a></h1>
         
 
         <div class="post-meta">
@@ -452,8 +1031,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-23T22:35:40+08:00">
-                2020-02-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-27T22:35:40+08:00">
+                2017-02-27
               </time>
             
 
@@ -556,7 +1135,7 @@
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/02/23/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/2.%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/#more" rel="contents">
+            <a class="btn" href="/2017/02/27/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/2.%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -607,7 +1186,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/22/Markdown%E6%A8%A1%E6%9D%BF/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/22/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/1.%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="agmtopy">
@@ -626,7 +1205,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/02/22/Markdown%E6%A8%A1%E6%9D%BF/" itemprop="url">Markdown模板</a></h1>
+                <a class="post-title-link" href="/2017/02/22/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/1.%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/" itemprop="url">线程基础</a></h1>
         
 
         <div class="post-meta">
@@ -638,188 +1217,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-22T12:48:48+08:00">
-                2020-02-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/markdown/" itemprop="url" rel="index">
-                    <span itemprop="name">markdown</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  573
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          Markdown 基本要素这篇文件意在简要介绍 GitHub Flavored Markdown 写作。
-语法说明标题1234567891011# 这是 &lt;h1&gt; 一级标题## 这是 &lt;h2&gt; 二级标题### 这是 &lt;h3&gt; 三级标题#### 这是 &lt;h4&
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/02/22/Markdown%E6%A8%A1%E6%9D%BF/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/22/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/1.%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="agmtopy">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://lh3.googleusercontent.com/a-/AOh14GgpoPhwzcSUZRZB6lHH_maq8ImUPog4tGdED1r5=s96-cc-rg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="agmtopy博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/22/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/1.%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/" itemprop="url">线程基础</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-22T11:28:29+08:00">
-                2020-02-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-22T11:28:29+08:00">
+                2017-02-22
               </time>
             
 
@@ -918,366 +1317,7 @@
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/02/22/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/1.%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/21/git%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="agmtopy">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://lh3.googleusercontent.com/a-/AOh14GgpoPhwzcSUZRZB6lHH_maq8ImUPog4tGdED1r5=s96-cc-rg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="agmtopy博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/21/git%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" itemprop="url">git多环境配置</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-21T22:00:49+08:00">
-                2020-02-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/git/" itemprop="url" rel="index">
-                    <span itemprop="name">git</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  311
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          疫情期间，需要在家远程办公，因此需要在电脑上配置两套git环境分别是github、gitlab的。在配置过程中遇到了一些阻碍，特此记录下来。
-步骤一：生成SSH-Key1ssh-keygen -t rsa -C "email@xx.com" -f ~/.ssh/id_rsa #(或gitlab_rs
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/02/21/git%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/21/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="agmtopy">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://lh3.googleusercontent.com/a-/AOh14GgpoPhwzcSUZRZB6lHH_maq8ImUPog4tGdED1r5=s96-cc-rg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="agmtopy博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/21/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-21T21:40:53+08:00">
-                2020-02-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hexo/" itemprop="url" rel="index">
-                    <span itemprop="name">hexo</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  73
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in 
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/02/21/hello-world/#more" rel="contents">
+            <a class="btn" href="/2017/02/22/2.%E5%B9%B6%E5%8F%91%E7%9F%A5%E8%AF%86/1.%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1319,7 +1359,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/">最前</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
+    <a class="extend prev" rel="prev" href="/page/5/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
   </nav>
 
 
@@ -1442,7 +1482,7 @@
     
       <span class="post-meta-item-text">网站总字数&#58;</span>
     
-    <span title="网站总字数">42.2k</span>
+    <span title="网站总字数">42.5k</span>
   
 </div>
 
