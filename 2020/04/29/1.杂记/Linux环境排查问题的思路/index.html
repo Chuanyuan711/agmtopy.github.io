@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="分布式事务," />
+  <meta name="keywords" content="linux,arthas," />
 
 
 
@@ -79,17 +79,21 @@
 
 
 
-<meta name="description" content="分布式事务理解分布式事务是为了解决在微服务架构下，业务数据在跨进程执行时，需要保证业务的事务性。分布式事务框架主要有Seata、atomikos、TX-LCN。其他方式处理我目前已知的有通过mq的方式(待研究); 基本原理 CAP定理 BASE理论 ACID理论   CAP理论CAP理论指的是在一个分布式系统中无法同时满足Consistency(一致性)、Availability(可用性)、Par">
+<meta name="description" content="Linux环境排查问题的工具和思路将工作中使用到的在Linux下进行排查问题的工具和思路进行一个总结，主要从CPU、内存、I&#x2F;O、网络、JVM这五个方面来进行。 CPU部分CPU的性能指标 图示  CPU的性能分析工具   性能指标 性能工具 描述    系统CPU使用率 top、vmstat、mpstat、sar、&#x2F;proc&#x2F;stat top、vmstat、mpstat作为实时的监控数据;sar">
 <meta property="og:type" content="article">
-<meta property="og:title" content="分布式事务理解">
-<meta property="og:url" content="http://yoursite.com/2019/06/28/1.%E8%AF%BB%E4%B9%A6%E6%9D%82%E8%AE%B0/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E6%80%9D%E8%80%83/index.html">
+<meta property="og:title" content="Linux环境排查问题的思路">
+<meta property="og:url" content="http://yoursite.com/2020/04/29/1.%E6%9D%82%E8%AE%B0/Linux%E7%8E%AF%E5%A2%83%E6%8E%92%E6%9F%A5%E9%97%AE%E9%A2%98%E7%9A%84%E6%80%9D%E8%B7%AF/index.html">
 <meta property="og:site_name" content="agmtopy博客">
-<meta property="og:description" content="分布式事务理解分布式事务是为了解决在微服务架构下，业务数据在跨进程执行时，需要保证业务的事务性。分布式事务框架主要有Seata、atomikos、TX-LCN。其他方式处理我目前已知的有通过mq的方式(待研究); 基本原理 CAP定理 BASE理论 ACID理论   CAP理论CAP理论指的是在一个分布式系统中无法同时满足Consistency(一致性)、Availability(可用性)、Par">
-<meta property="article:published_time" content="2019-06-28T14:21:19.000Z">
-<meta property="article:modified_time" content="2020-04-24T15:35:56.049Z">
+<meta property="og:description" content="Linux环境排查问题的工具和思路将工作中使用到的在Linux下进行排查问题的工具和思路进行一个总结，主要从CPU、内存、I&#x2F;O、网络、JVM这五个方面来进行。 CPU部分CPU的性能指标 图示  CPU的性能分析工具   性能指标 性能工具 描述    系统CPU使用率 top、vmstat、mpstat、sar、&#x2F;proc&#x2F;stat top、vmstat、mpstat作为实时的监控数据;sar">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/29/JoptbV.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/29/Jo9FaT.png">
+<meta property="article:published_time" content="2020-04-28T16:28:05.000Z">
+<meta property="article:modified_time" content="2020-04-28T17:32:58.106Z">
 <meta property="article:author" content="agmtopy">
-<meta property="article:tag" content="分布式事务">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="arthas">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/04/29/JoptbV.png">
 
 
 
@@ -119,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/06/28/1.读书杂记/分布式事务思考/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/04/29/1.杂记/Linux环境排查问题的思路/"/>
 
 
 
 
 
-  <title>分布式事务理解 | agmtopy博客</title>
+  <title>Linux环境排查问题的思路 | agmtopy博客</title>
   
 
 
@@ -242,7 +246,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/28/1.%E8%AF%BB%E4%B9%A6%E6%9D%82%E8%AE%B0/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E6%80%9D%E8%80%83/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/29/1.%E6%9D%82%E8%AE%B0/Linux%E7%8E%AF%E5%A2%83%E6%8E%92%E6%9F%A5%E9%97%AE%E9%A2%98%E7%9A%84%E6%80%9D%E8%B7%AF/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="agmtopy">
@@ -259,7 +263,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">分布式事务理解</h1>
+          <h1 class="post-title" itemprop="name headline">Linux环境排查问题的思路</h1>
         
 
         <div class="post-meta">
@@ -271,8 +275,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-28T22:21:19+08:00">
-                2019-06-28
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-29T00:28:05+08:00">
+                2020-04-29
               </time>
             
 
@@ -294,8 +298,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
                   </a>
                 </span>
 
@@ -325,7 +329,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  758
+                  234
                 </span>
               
 
@@ -341,7 +345,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  1
                 </span>
               
             </div>
@@ -362,56 +366,46 @@
       
 
       
-        <h1 id="分布式事务理解"><a href="#分布式事务理解" class="headerlink" title="分布式事务理解"></a>分布式事务理解</h1><p>分布式事务是为了解决在微服务架构下，业务数据在跨进程执行时，需要保证业务的事务性。<br>分布式事务框架主要有<strong>Seata</strong>、<strong>atomikos</strong>、<strong>TX-LCN</strong>。其他方式处理我目前已知的有通过mq的方式(待研究);</p>
-<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><ul>
-<li>CAP定理</li>
-<li>BASE理论</li>
-<li>ACID理论 </li>
+        <h1 id="Linux环境排查问题的工具和思路"><a href="#Linux环境排查问题的工具和思路" class="headerlink" title="Linux环境排查问题的工具和思路"></a>Linux环境排查问题的工具和思路</h1><p>将工作中使用到的在Linux下进行排查问题的工具和思路进行一个总结，主要从<strong>CPU</strong>、<strong>内存</strong>、<strong>I/O</strong>、<strong>网络</strong>、<strong>JVM</strong>这五个方面来进行。</p>
+<h2 id="CPU部分"><a href="#CPU部分" class="headerlink" title="CPU部分"></a><strong>CPU</strong>部分</h2><h3 id="CPU的性能指标"><a href="#CPU的性能指标" class="headerlink" title="CPU的性能指标"></a>CPU的性能指标</h3><ul>
+<li>图示<br><a href="https://imgchr.com/i/JoptbV" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/04/29/JoptbV.png" alt="JoptbV.png"></a></li>
 </ul>
-<h3 id="CAP理论"><a href="#CAP理论" class="headerlink" title="CAP理论"></a>CAP理论</h3><p>CAP理论指的是在一个分布式系统中无法同时满足Consistency(一致性)、Availability(可用性)、Partition tolerance(分区容错性)</p>
-<ul>
-<li>一致性(Consistency)指的是同一时间，任意节点下的数据都是一样的</li>
-<li>可用性(Availability)指的是同一时间，任意节点均可访问</li>
-<li>分区容错性(Partition tolerance)指的是数据没有在一定的时间内完成数据的一致性</li>
-</ul>
-<p>由于现有网络架构，<strong>分区容错性</strong>一定存在。因此实际系统中只能存在AP或CP两种情况。</p>
-<h3 id="BASE理论"><a href="#BASE理论" class="headerlink" title="BASE理论"></a>BASE理论</h3><p>BASE理论指的是Basically Available（基本可用）、Soft-state（ 软状态/柔性事务）、Eventual Consistency（最终一致性）。是根据CAP理论演化而来的，适合于对数据一致性要求不那么高的系统。</p>
-<ul>
-<li>Basically Available（基本可用）指的是允许系统在出现故障的适合保证核心业务允许而损失一些可用性</li>
-<li>Soft-state（ 软状态/柔性事务）指的是允许系统存在数据不一致的中间状态</li>
-<li>Eventual Consistency（最终一致性）指的是系统中的所有数据副本经过一定时间后，最终能够达到一致的状态，不需要实时保证系统数据的强一致性。</li>
-</ul>
-<h2 id="柔性事务"><a href="#柔性事务" class="headerlink" title="柔性事务"></a>柔性事务</h2><p>柔性事务指的是数据库中的事务满足BASE理论而不是ACID理论的事务。<br>主要有一下四种：</p>
-<ul>
-<li>AT模式</li>
-<li>TCC模式</li>
-<li>Saga模式</li>
-<li>XA模式</li>
-</ul>
-<h3 id="AT模式"><a href="#AT模式" class="headerlink" title="AT模式"></a>AT模式</h3><p> <strong>AT模式</strong>主要分为两个步骤：</p>
-<ol>
-<li>事务发起者执行业务sql、保存<strong>after image</strong>、<strong>before image</strong>、生成行级锁</li>
-<li>根据协调者判断事务是否提交还是回滚</li>
-</ol>
-<h3 id="TCC模式"><a href="#TCC模式" class="headerlink" title="TCC模式"></a>TCC模式</h3><p><strong>TCC模式</strong>主要分为两个步骤：</p>
-<ol>
-<li>try 做资源检查</li>
-<li>1 Confirm 提交资源</li>
-<li>2 Cancel 回滚资源</li>
-</ol>
-<p>TCC模式需要将业务代码改造成符合TCC模式的三个方法，对业务有侵入。<br>由于TCC模式不需要行级锁，因此并发性较高。</p>
-<h3 id="Saga模式"><a href="#Saga模式" class="headerlink" title="Saga模式"></a>Saga模式</h3><p><strong>Saga模式</strong>指的是通过冲正补偿服务来实现事务的，适用的场景是业务流程长且需要保证事务最终一致性的业务系统。</p>
-<h3 id="XA模式"><a href="#XA模式" class="headerlink" title="XA模式"></a>XA模式</h3><p><strong>XA模式</strong>指的是一阶段预提交，并将提交结果反馈给==协调者==，协调者收到全部参与者的结果后，同一执行提交或回滚。</p>
-<blockquote>
-<p>参考文档</p>
-</blockquote>
-<ul>
-<li><a href="https://www.jianshu.com/p/917cb4bdaa03" target="_blank" rel="noopener">由Seata看分布式事务取舍</a></li>
-<li><a href="https://seata.io/zh-cn/" target="_blank" rel="noopener">seata官网</a></li>
-<li><a href="https://www.jianshu.com/p/73beee3c70e9" target="_blank" rel="noopener">分布式事务解决方案框架(LCN)</a></li>
-<li><a href="https://www.codingapi.com/docs/txlcn-lesson01/" target="_blank" rel="noopener">分布式事务从0到1-认识分布式事务</a></li>
-<li><a href="http://thesecretlivesofdata.com/raft/" target="_blank" rel="noopener">raft算法</a></li>
-<li><a href="https://www.cnblogs.com/jajian/p/10014145.html" target="_blank" rel="noopener">终于有人把“TCC分布式事务”实现原理讲明白了</a></li>
+<h3 id="CPU的性能分析工具"><a href="#CPU的性能分析工具" class="headerlink" title="CPU的性能分析工具"></a>CPU的性能分析工具</h3><table>
+<thead>
+<tr>
+<th>性能指标</th>
+<th>性能工具</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>系统CPU使用率</td>
+<td>top、vmstat、mpstat、sar、/proc/stat</td>
+<td>top、vmstat、mpstat作为实时的监控数据;sar可记录历史;/proc/stat</td>
+</tr>
+<tr>
+<td>进程CPU使用率</td>
+<td>top、ps、pidstat、htop、atop</td>
+<td>top和ps可以按照cpu使用率进行查看;pidstat展示实际运行的进程;htop和atop可以以不同颜色进行展示</td>
+</tr>
+<tr>
+<td>平均负载</td>
+<td>uptime、top、/proc/loadavg</td>
+<td>uptime简洁、top全面、/proc/loadavg提供监控数据</td>
+</tr>
+<tr>
+<td>系统上下文切换</td>
+<td>vmstat</td>
+<td>提供系统级的上下文切换次数</td>
+</tr>
+<tr>
+<td>进程上下文切换</td>
+<td>pidstat</td>
+<td>提供进程级的上下文切换次数</td>
+</tr>
+</tbody></table>
+<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><ul>
+<li>htop<br><a href="https://imgchr.com/i/Jo9FaT" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/04/29/Jo9FaT.png" alt="Jo9FaT.png"></a></li>
 </ul>
 
       
@@ -430,7 +424,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" rel="tag"># 分布式事务</a>
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/arthas/" rel="tag"># arthas</a>
           
         </div>
       
@@ -443,8 +439,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/04/01/7.%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E7%9F%A5%E8%AF%86/11.rocketmq%E7%9A%84%E5%AD%98%E5%82%A8%E5%8E%9F%E7%90%86/" rel="next" title="rocketmq的存储原理">
-                <i class="fa fa-chevron-left"></i> rocketmq的存储原理
+              <a href="/2020/04/24/8.duboo%E7%AC%94%E8%AE%B0/99.dubbo%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%BD%92%E7%BA%B3/" rel="next" title="dubbo常见问题归纳">
+                <i class="fa fa-chevron-left"></i> dubbo常见问题归纳
               </a>
             
           </div>
@@ -452,10 +448,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/02/21/git%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="prev" title="git多环境配置">
-                git多环境配置 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -536,7 +528,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">56</span>
+                  <span class="site-state-item-count">57</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -547,7 +539,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -558,7 +550,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">29</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -591,7 +583,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式事务理解"><span class="nav-number">1.</span> <span class="nav-text">分布式事务理解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本原理"><span class="nav-number">1.1.</span> <span class="nav-text">基本原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CAP理论"><span class="nav-number">1.1.1.</span> <span class="nav-text">CAP理论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BASE理论"><span class="nav-number">1.1.2.</span> <span class="nav-text">BASE理论</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#柔性事务"><span class="nav-number">1.2.</span> <span class="nav-text">柔性事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AT模式"><span class="nav-number">1.2.1.</span> <span class="nav-text">AT模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCC模式"><span class="nav-number">1.2.2.</span> <span class="nav-text">TCC模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Saga模式"><span class="nav-number">1.2.3.</span> <span class="nav-text">Saga模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XA模式"><span class="nav-number">1.2.4.</span> <span class="nav-text">XA模式</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux环境排查问题的工具和思路"><span class="nav-number">1.</span> <span class="nav-text">Linux环境排查问题的工具和思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU部分"><span class="nav-number">1.1.</span> <span class="nav-text">CPU部分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU的性能指标"><span class="nav-number">1.1.1.</span> <span class="nav-text">CPU的性能指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU的性能分析工具"><span class="nav-number">1.1.2.</span> <span class="nav-text">CPU的性能分析工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例"><span class="nav-number">1.1.3.</span> <span class="nav-text">实例</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -625,7 +617,7 @@
     
       <span class="post-meta-item-text">网站总字数&#58;</span>
     
-    <span title="网站总字数">42.7k</span>
+    <span title="网站总字数">42.9k</span>
   
 </div>
 
