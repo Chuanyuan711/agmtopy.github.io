@@ -88,7 +88,7 @@
 <meta property="og:image" content="https://s1.ax1x.com/2020/05/02/JjvW4I.png">
 <meta property="og:image" content="https://s1.ax1x.com/2020/05/02/Jvwl01.png">
 <meta property="article:published_time" content="2020-05-04T01:06:49.000Z">
-<meta property="article:modified_time" content="2020-05-04T01:08:12.551Z">
+<meta property="article:modified_time" content="2020-05-05T13:14:30.719Z">
 <meta property="article:author" content="agmtopy">
 <meta property="article:tag" content="jvm">
 <meta name="twitter:card" content="summary">
@@ -328,7 +328,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  458
+                  714
                 </span>
               
 
@@ -344,7 +344,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  2
                 </span>
               
             </div>
@@ -394,6 +394,35 @@
 <li>操作数栈（存放方法运行期间的操作数或结果）</li>
 <li>动态连接（方法调用过程中的动态连接）</li>
 <li>方法返回地址</li>
+</ul>
+<h2 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h2><p>程序计数器是用来标记当前线程正在执行的程序运行到哪了一行。</p>
+<h2 id="元数据空间"><a href="#元数据空间" class="headerlink" title="元数据空间"></a>元数据空间</h2><p><strong>元数据空间</strong>是JDK8中划分出来的，用于替代JDK7已经之前的<strong>Perm区(永久代)</strong>。<br><strong>元数据空间</strong>存储<strong>class信息</strong>、<strong>常量池</strong>、<strong>方法数据</strong>、<strong>方法代码</strong>等等</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>jvm中运行的参数是在<strong>栈</strong>上的信息，栈上保存的引用指向的是<strong>堆</strong>中的对象，<strong>类信息</strong>、<strong>常量</strong>等信息则是放在元数据空间中。</p>
+<h1 id="类的加载机制"><a href="#类的加载机制" class="headerlink" title="类的加载机制"></a>类的加载机制</h1><h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><blockquote>
+<p>加载 &gt; 验证 &gt; 准备 &gt; 解析 &gt; 初始化</p>
+</blockquote>
+<p><cint>执行时机早于<int>,因为<cint>在装载到元数据区时就进行执行。</p>
+<h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><ul>
+<li><p>Bootstrap ClassLoader</p>
+<blockquote>
+<p>最底层的类加载器，用于加载java底层类的类加载器</p>
+</blockquote>
+</li>
+<li><p>Extention ClassLoader</p>
+<blockquote>
+<p>扩展类的类加载器，用于加载lib/ext下的文件</p>
+</blockquote>
+</li>
+<li><p>App ClassLoader</p>
+<blockquote>
+<p>应用加载器，用于加载<strong>classPath</strong>下的文件</p>
+</blockquote>
+</li>
+<li><p>Custom ClassLoader</p>
+<blockquote>
+<p>自定义的类加载器</p>
+</blockquote>
+</li>
 </ul>
 
       
@@ -518,7 +547,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">60</span>
+                  <span class="site-state-item-count">61</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -540,7 +569,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -573,7 +602,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM基础原理"><span class="nav-number">1.</span> <span class="nav-text">JVM基础原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#jvm基础"><span class="nav-number">1.1.</span> <span class="nav-text">jvm基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jvm是什么？"><span class="nav-number">1.1.1.</span> <span class="nav-text">jvm是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jvm与操作系统的关系？"><span class="nav-number">1.1.2.</span> <span class="nav-text">jvm与操作系统的关系？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jvm、jdk、jre之间的关系？"><span class="nav-number">1.1.3.</span> <span class="nav-text">jvm、jdk、jre之间的关系？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java虚拟机规范与Java语言规范之间的关系？"><span class="nav-number">1.1.4.</span> <span class="nav-text">java虚拟机规范与Java语言规范之间的关系？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jvm中的内存划分"><span class="nav-number">1.2.</span> <span class="nav-text">jvm中的内存划分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#堆区"><span class="nav-number">1.3.</span> <span class="nav-text">堆区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#栈区"><span class="nav-number">1.4.</span> <span class="nav-text">栈区</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM基础原理"><span class="nav-number">1.</span> <span class="nav-text">JVM基础原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#jvm基础"><span class="nav-number">1.1.</span> <span class="nav-text">jvm基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jvm是什么？"><span class="nav-number">1.1.1.</span> <span class="nav-text">jvm是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jvm与操作系统的关系？"><span class="nav-number">1.1.2.</span> <span class="nav-text">jvm与操作系统的关系？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jvm、jdk、jre之间的关系？"><span class="nav-number">1.1.3.</span> <span class="nav-text">jvm、jdk、jre之间的关系？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java虚拟机规范与Java语言规范之间的关系？"><span class="nav-number">1.1.4.</span> <span class="nav-text">java虚拟机规范与Java语言规范之间的关系？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jvm中的内存划分"><span class="nav-number">1.2.</span> <span class="nav-text">jvm中的内存划分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#堆区"><span class="nav-number">1.3.</span> <span class="nav-text">堆区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#栈区"><span class="nav-number">1.4.</span> <span class="nav-text">栈区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#程序计数器"><span class="nav-number">1.5.</span> <span class="nav-text">程序计数器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#元数据空间"><span class="nav-number">1.6.</span> <span class="nav-text">元数据空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.7.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类的加载机制"><span class="nav-number">2.</span> <span class="nav-text">类的加载机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#流程"><span class="nav-number">2.1.</span> <span class="nav-text">流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载器"><span class="nav-number">2.2.</span> <span class="nav-text">类加载器</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -607,7 +636,7 @@
     
       <span class="post-meta-item-text">网站总字数&#58;</span>
     
-    <span title="网站总字数">45.1k</span>
+    <span title="网站总字数">45.4k</span>
   
 </div>
 
