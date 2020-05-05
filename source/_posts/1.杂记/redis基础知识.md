@@ -1,6 +1,6 @@
 ---
 title: redis基础知识
-date: 2020-02-25 23:01:21
+date: 2019-02-25 23:01:21
 categories: 读书杂记
 tags:
   - redis
